@@ -1,0 +1,116 @@
+# https://www.asyncapi.com/tutorial.html - how I created this file
+# https://github.com/asyncapi/asyncapi - Full Docs
+# Documentation builder - https://github.com/asyncapi/docgen
+asyncapi: '1.0.0'
+info:
+  title: Mediaframework - Output - API
+  version: '0.0.1'
+  description: Output API documented for subscribers through socket IO websockets.
+  license:
+    name: MIT
+    url: 'https://opensource.org/licenses/MIT'
+
+baseTopic: mediaframework.output.1.0
+
+topics:
+  event.playback.scenes.themes.show:
+    publish:
+      $ref: '#/components/messages/scenesThemesShow'
+  event.playback.scenes.show:
+      publish:
+        $ref: '#/components/messages/scenesShow'
+  event.playback.media.show:
+      publish:
+        $ref: '#/components/messages/mediaShow'
+
+components:
+  messages:
+
+    auth:
+      summary: Required by a client to authenticate with the web sockets
+      payload:
+        $ref: "#/components/schemas/authPayload"
+
+    subscribe:
+      summary: Allow a client to subscribe to topics for a given room
+      payload:
+        $ref: "#/components/schemas/subscribePayload"
+
+    scenesThemesShow:
+      summary: Receive an update to start showing Scene and Theme combinations.
+      payload:
+        $ref: "#/components/schemas/scenesThemesShowPayload"
+
+    scenesShow:
+      summary: Receive an update to start showing scenes
+      payload:
+        $ref: "#/components/schemas/scenesShowPayload"
+
+    mediaShow:
+      summary: Receive an update to start showing a media object
+      payload:
+              $ref: "#/components/schemas/mediaShowPayload"
+
+
+  # Main sticking point of the payload distributions
+  ## If we keep the rooms as the primary namespace, we might need to use the wrapper of
+  ### command, where the command name is the namespace + path (IE the api path, eg playback.scenes.themes.show)
+  #### and the command value is one of the payloads described below.
+  ## I think we will need to keep the primary namespace for client registration to individual pipes of messages.
+  ## while the contents of the messages are always the same namespaces and schemas.
+  schemas:
+
+    authPayload:
+      type: object
+      properties:
+        password:
+          type: string
+        token:
+          type: string
+
+    subscribePayload:
+      type: string
+
+    mediaShowPayload:
+      type: object
+      required:
+        - _id
+        - type
+        - tags
+      properties:
+        _id:
+          type: string
+        type:
+          type: string
+        tags:
+          type: string
+        text:
+          type: string
+        style:
+          type: object
+        url:
+          type: string
+
+    scenesThemesShowPayload:
+      type: object
+      properties:
+        scenes:
+          type: array
+          description: All the scenes ids as strings
+          items:
+            type: string
+
+        themes:
+          type: array
+          description: All the themes as strings
+          items:
+            type: string
+
+    scenesShowPayload:
+      type: object
+      properties:
+        scenes:
+          type: array
+          description: All the scenes ids as strings
+          items:
+            type: string
