@@ -1,7 +1,21 @@
 {
   "name": "uos-mf-api",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha --recursive test",
+    "start": "node --harmony app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UoSMediaFrameworks/uos-mf-api-controller.git"
+  },
+  "engines": {
+    "node": "4.8.x"
+  },
+  "author": "",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",

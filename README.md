@@ -40,6 +40,12 @@ The async API documentation can be found [host]:[port]/ws-docs
 
 How to build documentation
 
+### Prerequisite  
+
+install npm install -g asyncapi-docgen
+
+(Caveat - requires node 7.6.x+, this conflicts with our current nodejs version. [nvm](https://github.com/creationix/nvm) or any nodejs installation manager can be used to easily toggle versions for using this tool)
+
 Warning: If you wish to include the version in the generated results, alter below command.
 
 We can improve our approach here.
