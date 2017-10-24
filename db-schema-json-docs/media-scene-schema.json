@@ -1,0 +1,80 @@
+{
+  "definitions": {
+    "MediaSceneSchema": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "required": false
+        },
+        "scene": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "type": {
+                "type": "string",
+                "required": false
+              },
+              "url": {
+                "type": "string",
+                "required": false
+              },
+              "vmob": {
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "required": false
+                  },
+                  "hasTranscoded": {
+                    "type": "boolean",
+                    "required": false
+                  },
+                  "transcoder": {
+                    "type": "number",
+                    "required": false
+                  },
+                  "vimeoId": {
+                    "type": "string",
+                    "required": false
+                  },
+                  "description": {
+                    "type": "string",
+                    "required": false
+                  },
+                  "uploadedTimestamp": {
+                    "type": "string",
+                    "required": false
+                  },
+                  "transcodedTimestamp": {
+                    "type": "string",
+                    "required": false
+                  },
+                  "transcodingStartedTimestamp": {
+                    "type": "string",
+                    "required": false
+                  },
+                  "video": {
+                    "type": "mixed",
+                    "required": false
+                  },
+                  "_id": {
+                    "type": "string",
+                    "required": false
+                  }
+                },
+                "type": "object"
+              },
+              "_id": {
+                "type": "string",
+                "required": false
+              }
+            }
+          }
+        },
+        "_id": {
+          "type": "string",
+          "required": false
+        }
+      }
+    }
+  }
+}
