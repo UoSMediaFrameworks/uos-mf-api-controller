@@ -1,6 +1,6 @@
 {
   "name": "uos-mf-api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "main": "app.js",
   "scripts": {
@@ -16,9 +16,13 @@
   },
   "author": "",
   "license": "MIT",
+  "devDependencies": {
+    "mongoose-to-swagger": "aaronpcz/mongoose-to-swagger"
+  },
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
+    "mongoose": "^4.12.4",
     "swagger-jsdoc": "^1.9.7",
     "swagger-ui-dist": "^3.3.2",
     "uos-legacy-hub-controller": "uosmediaframeworks/uos-legacy-hub-controller"

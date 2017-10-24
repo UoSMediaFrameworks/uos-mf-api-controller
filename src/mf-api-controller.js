@@ -12,12 +12,14 @@ class MediaframeApiController extends MediaframeworkHubController {
     }
 
     init(callback) {
-        var self = this;
+        const self = this;
+
         this.mediaHubConnection.tryConnect(function() {
 
             self.dataController = new DataController(self.mediaHubConnection.hub, self.io);
             self.commandAPIController = new CommandAPIController(self.mediaHubConnection.hub, self.io);
 
+            // APEP define a public route for the API documentation
             self.app.get('/api-docs.json', function(req, res) {
                 res.json(self.config.swaggerSpec);
             });
@@ -62,6 +64,14 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          - sceneId
              *      properties:
              *          sceneId:
+             *              type: string
+             *
+             *  SceneName:
+             *      type: object
+             *      required:
+             *          - sceneName
+             *      properties:
+             *          sceneName:
              *              type: string
              *
              *  Scene:
@@ -109,6 +119,20 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              items:
              *                  $ref: '#/definitions/Scene'
              *
+             *  PlayScene:
+             *      type: object
+             *      required:
+             *          - roomId:
+             *          - scene
+             *      properties:
+             *          roomId:
+             *              type: string
+             *              description: The playback room
+             *          scene:
+             *              type: object
+             *              schema:
+             *                  $ref: '#/definitions/Scene'
+             *
              *  PlayMedia:
              *      type: object
              *      required:
@@ -139,8 +163,52 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              type: string
              *          groupId:
              *              type: string
+             *
+             *  PlaySceneTheme:
+             *      type: object
+             *      properties:
+             *          roomId:
+             *              type: string
+             *          sceneTheme:
+             *              type: object
+             *              schema:
+             *                  $ref: '#/definitions/SceneTheme'
+             *
+             *  SceneTheme:
+             *      type: object
+             *      properties:
+             *          scene:
+             *              type: string
+             *              description: String Scene Id
+             *          theme:
+             *              type: string
+             *              description: String theme
+             *
+             *  SceneThemes:
+             *      type: array
+             *      items:
+             *          $ref: '#/definitions/SceneTheme'
+             *
+             *  PlayTheme:
+             *      type: object
+             *      properties:
+             *          roomId:
+             *              type: string
+             *          theme:
+             *              type: object
+             *              schema:
+             *                  $ref: '#/definitions/Theme'
+             *
+             *  SetTagMatcher:
+             *      type: string
+             *      description: A valid tag matcher string, bool tag matching allowed
+             *
+             *  SceneList:
+             *      type: array
+             *      items:
+             *          $ref: '#/definitions/MediaSceneSchema'
+             *
              */
-
 
             /**
              * @swagger
@@ -175,7 +243,6 @@ class MediaframeApiController extends MediaframeworkHubController {
                 });
             });
 
-
             /**
              * @swagger
              * /playback/scenes/themes/show:
@@ -200,7 +267,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/scenes/themes/show', function(req, res){
+            self.router.post('/playback/scenes/themes/show', function(req, res){
 
                 console.log("/playback/scenes/themes/show");
                 console.log(req.body);
@@ -234,7 +301,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/scenes/show', function(req, res) {
+            self.router.post('/playback/scenes/show', function(req, res) {
 
                 console.log("/playback/scenes/show");
                 console.log(req.body);
@@ -268,7 +335,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/media/show', function(req, res) {
+            self.router.post('/playback/media/show', function(req, res) {
 
                 console.log("/playback/media/show");
                 console.log(req.body);
@@ -276,6 +343,246 @@ class MediaframeApiController extends MediaframeworkHubController {
                 self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.show", req.body.play);
                 res.json({ack: true});
             });
+
+            /**
+             * @swagger
+             * /playback/scenes/themes/permutations:
+             *  get:
+             *      description: Get a list of every unique permutations of SceneTheme from a bucket of Scenes and Themes
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: play
+             *            description: A play request
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/Play'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: List of SceneTheme Combinations
+             *              schema:
+             *                  $ref: '#/definitions/SceneThemes'
+             */
+            self.router.get('/playback/scenes/themes/permutations', function(req, res){});
+
+            /**
+             * @swagger
+             * /playback/scene/show:
+             *  post:
+             *      description: Show scene
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: play
+             *            description: A play request
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/PlayScene'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             */
+            self.router.post('/playback/scene/show', function(req, res){});
+
+            /**
+             * @swagger
+             * /playback/scene/theme/show:
+             *  post:
+             *      description: Show scene theme
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: play
+             *            description: A play request
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/PlaySceneTheme'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             */
+            self.router.post('/playback/scene/theme/show', function(req, res){});
+
+            /**
+             * @swagger
+             * /playback/theme/show:
+             *  post:
+             *      description: Show theme
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: play
+             *            description: A play request
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/PlayTheme'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             */
+            self.router.post('/playback/theme/show', function(req, res){});
+
+            /**
+             * @swagger
+             * /playback/tag/matcher/set:
+             *  post:
+             *      description: Set a tag matcher
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: matcher
+             *            description: A tag matcher update request
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/SetTagMatcher'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             */
+            self.router.post('/playback/tag/matcher/set', function(req, res){});
+
+            /**
+             * @swagger
+             * /scene/list:
+             *  get:
+             *      description: Get a list of media scenes (_id, names and _groupID)
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: List of media scenes
+             *              schema:
+             *                  $ref: '#/definitions/SceneList'
+             *          400:
+             *              description: Database error
+             */
+            self.router.get('/scene/list', function(req, res) {
+
+                const groupId = res.locals[API_GROUP_ID_KEY];
+
+                console.log(`/scene/list - groupId: ${groupId}`);
+
+                self.dataController.listScenes(groupId, function(err, scenes){
+                    if (err) {
+                        return res.sendStatus(400);
+                    } else {
+                        return res.status(200).send(scenes);
+                    }
+                });
+            });
+
+            /**
+             * @swagger
+             * /scene/find/by/name:
+             *  get:
+             *      description: Get a media scene.
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: header
+             *            name: sceneName
+             *            description: A scene name
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/SceneName'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: A media scene
+             *              schema:
+             *                  $ref: '#/definitions/MediaSceneSchema'
+             *          400:
+             *              description: Database error
+             */
+            self.router.get('/scene/find/by/name', function(req, res) {
+
+                const sceneName = req.get("sceneName");
+
+                console.log(`scene/find/by/name  - sceneName: ${sceneName}`);
+
+                self.dataController.loadSceneByName(sceneName, function(err, scene) {
+                    if(err) {
+                        return res.status(400);
+                    } else {
+                        return res.status(200).send(scene);
+                    }
+                });
+            });
+
+            /**
+             * @swagger
+             * /scene/full:
+             *  get:
+             *      description: Get a media scene with any uploaded media object full database details appended.
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: header
+             *            name: sceneId
+             *            description: A scene id
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/SceneId'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: A media scene with any uploaded media objects appended in full
+             *              schema:
+             *                  $ref: '#/definitions/MediaSceneSchema'
+             *          400:
+             *              description: Database error
+             */
+            self.router.get('/scene/full', function(req, res) {
+                // APEP TODO
+                // 1. Move the asset store API into hub
+                // 2. Create asset store API request lib
+            });
+
+            const API_KEY_HEADER = "X-API-Key";
+            const API_GROUP_ID_KEY = "X-API-GroupID";
 
             function requireToken(req, res, next) {
 
@@ -285,7 +592,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                     return next();
                 }
 
-                const token = req.get("X-API-Key");
+                const token = req.get(API_KEY_HEADER);
 
                 if(!token) {
                     console.log("requireToken - check missing token in request header");
@@ -300,13 +607,18 @@ class MediaframeApiController extends MediaframeworkHubController {
                         console.log(`requireToken - check error: ${err}`);
                         res.sendStatus(401);
                     } else {
-                        console.log("requireToken - check successful");
+                        console.log(`requireToken - check successful - groupId: ${groupId}`);
+
+                        // APEP using response.locals, we can pass data between this middleware function and the request handler.
+                        res.locals[API_GROUP_ID_KEY] = groupId;
+
                         next();
                     }
                 });
             }
 
-            self.app.use("/playback", requireToken, self.router);
+            // APEP host the playback API behind require pass key token security
+            self.app.use(requireToken, self.router);
 
             if(callback)
                 callback();
@@ -316,7 +628,20 @@ class MediaframeApiController extends MediaframeworkHubController {
     clientSocketSuccessfulAuth(socket) {
         var self = this;
 
-        // APEP TODO attach socket listeners
+        // APEP TODO implement socket version of REST api
+        socket.on("/playback/scenes/themes/show", function(data, callback){});
+        socket.on("/playback/scenes/show", function(data, callback){});
+        socket.on("/playback/media/show", function(data, callback){});
+
+        socket.on("/playback/scenes/themes/permutations", function(data, callback){});
+        socket.on("/playback/scene/show", function(data, callback){});
+        socket.on("/playback/scene/theme/show", function(data, callback){});
+        socket.on("/playback/theme/show", function(data, callback){});
+        socket.on("/playback/tag/matcher/set", function(data, callback){});
+
+        socket.on("/scene/list", function(data, callback){});
+        socket.on("/scene/find/by/name", function(data, callback){});
+        socket.on("/scene/full", function(data, callback){});
     }
 }
 
