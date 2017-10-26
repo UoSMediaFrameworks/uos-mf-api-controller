@@ -4,7 +4,7 @@
 asyncapi: '1.0.0'
 info:
   title: Mediaframework - Output - API
-  version: '0.0.1'
+  version: '0.0.2'
   description: Output API documented for subscribers through socket IO websockets.
   license:
     name: MIT
@@ -17,15 +17,30 @@ topics:
     publish:
       $ref: '#/components/messages/scenesThemesShow'
   event.playback.scenes.show:
-      publish:
-        $ref: '#/components/messages/scenesShow'
+    publish:
+      $ref: '#/components/messages/scenesShow'
   event.playback.media.show:
-      publish:
-        $ref: '#/components/messages/mediaShow'
+    publish:
+      $ref: '#/components/messages/mediaShow'
+
+  event.playback.theme.set:
+    publish:
+      $ref: '#/components/messages/themeShow'
+
+  event.playback.tag.matcher.set:
+    publish:
+      $ref: '#/components/messages/tagMatcherShow'
+
+  event.playback.scene.show:
+    publish:
+      $ref: '#/components/messages/sceneShow'
+
+  event.playback.scene.theme.show:
+    publish:
+      $ref: '#/components/messages/sceneThemeShow'
 
 components:
   messages:
-
     auth:
       summary: Required by a client to authenticate with the web sockets
       payload:
@@ -49,7 +64,27 @@ components:
     mediaShow:
       summary: Receive an update to start showing a media object
       payload:
-              $ref: "#/components/schemas/mediaShowPayload"
+        $ref: "#/components/schemas/mediaShowPayload"
+
+    themeShow:
+      summary: Receive an update to start showing theme
+      payload:
+        $ref: "#/components/schemas/themeShowPayload"
+
+    tagMatcherShow:
+      summary: Receive an update to set a local tag matcher for content filtering
+      payload:
+        $ref: "#/components/schemas/tagMatcherShowPayload"
+
+    sceneShow:
+      summary: Receive an update to start showing a singular scene
+      payload:
+        $ref: "#/components/schemas/sceneShowPayload"
+
+    sceneThemeShow:
+      summary: Receive an update to start showing a scene and theme
+      payload:
+        $ref: "#/components/schemas/sceneThemeShowPayload"
 
 
   # Main sticking point of the payload distributions
@@ -59,6 +94,29 @@ components:
   ## I think we will need to keep the primary namespace for client registration to individual pipes of messages.
   ## while the contents of the messages are always the same namespaces and schemas.
   schemas:
+
+    sceneShowPayload:
+      type: object
+      properties:
+        scene:
+          type: string
+
+    sceneThemeShowPayload:
+      type: object
+      properties:
+        scene:
+          type: string
+        theme:
+          type: string
+
+    tagMatcherShowPayload:
+      type: string
+
+    themeShowPayload:
+      type: object
+      properties:
+        theme:
+          type: string
 
     authPayload:
       type: object
