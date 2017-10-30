@@ -10,3 +10,5 @@ gen
 
 node_modules/
 /dev-env.sh
+
+dist/
