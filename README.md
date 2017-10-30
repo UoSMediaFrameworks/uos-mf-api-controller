@@ -25,8 +25,19 @@ The JSON document lives at [host]:[port]/api-docs.json
 
 ## Building a UWP client from Swagger Open Api standards
 
+The project includes the codegen cli tool required, below is the command required.
+
 ```bash
-java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i http://localhost:3000/api-docs.json -l csharp -o dist/uwp_api_client
+java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i http://localhost:3000/api-docs.json -l csharp -o dist/uwp_api_client_<version>
+```
+
+Building from deployed environment requires an adjustment of the URL.
+
+### Building from deployed environment
+
+```bash
+java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i <host:port>/api-docs.json -l csharp -o dist/uwp_api_client_<version>
+java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/uwp_api_client_0.0.2rc1
 ```
 
 ## TODO Building a nodejs client
