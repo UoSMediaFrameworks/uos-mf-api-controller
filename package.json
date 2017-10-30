@@ -17,7 +17,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "mongoose-to-swagger": "aaronpcz/mongoose-to-swagger"
+    "mongoose-to-swagger": "aaronpcz/mongoose-to-swagger",
+    "yamljs": "^0.3.0"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -25,6 +26,7 @@
     "mongoose": "^4.12.4",
     "swagger-jsdoc": "^1.9.7",
     "swagger-ui-dist": "^3.3.2",
-    "uos-legacy-hub-controller": "uosmediaframeworks/uos-legacy-hub-controller"
+    "uos-legacy-hub-controller": "uosmediaframeworks/uos-legacy-hub-controller",
+    "uos-mf-db-schemas": "uosmediaframeworks/uos-mf-db-schemas#0.0.1rc1"
   }
 }

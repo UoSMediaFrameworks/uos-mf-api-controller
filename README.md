@@ -17,6 +17,23 @@ Command to run all the tests
 
 ```mocha --recursive test```
 
+## Create mongoose schema objects to be included as definitions
+
+TODO improvements required
+1. Review turning this into a CLI tool
+2. Make this tool more reusable
+3. Complete all schema in and out files for loading in app.js
+4. Review making this a non manual process
+5. Move the schemas to their own library
+
+Using the tool wrapped in a script, we can generate the required definitions as separate files.
+
+These are then included within app.js
+
+```bash
+node tools/convert-mongoose-schemas-to-swagger.js
+```
+
 ## Swagger & UI
 
 The swagger interface for exploring the REST api can be found [host]:[port]/rest-docs

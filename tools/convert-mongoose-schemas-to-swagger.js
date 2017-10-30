@@ -6,76 +6,8 @@
 // APEP Mongoose schema documentation http://mongoosejs.com/docs/schematypes.html
 
 const m2s = require('mongoose-to-swagger');
-const mongoose = require('mongoose');
 const fs = require('fs');
-
-const VideoSchema = new mongoose.Schema({
-    path: String,
-    hasTranscoded: { type: Boolean, default: false},
-
-    transcoder: Number, //simple odd or even for basic parallelisation of transcoding
-    vimeoId: String,
-    description: String,
-
-    uploadedTimestamp: { type: String, default: "" },
-    transcodedTimestamp:  { type: String, default: "" },
-    transcodingStartedTimestamp: { type: String, default: "" },
-    video: Object // APEP we could look at describing this using the crate plugin.
-});
-
-const ImageSchema = new mongoose.Schema({
-    path: String,
-    sceneId: String,
-    image: Object,
-    thumbnail: Object,
-    resized: Object
-});
-
-const AudioSchema = new mongoose.Schema({
-    path: String,
-    hasTranscoded: { type: Boolean, default: false},
-
-    description: String,
-
-    uploadedTimestamp: { type: String, default: "" },
-    transcodedTimestamp:  { type: String, default: "" },
-    transcodingStartedTimestamp: { type: String, default: "" },
-
-    audio: Object
-});
-
-const MediaAsset = new mongoose.Schema({
-    "type": String,
-    "url": {
-        type: String,
-        required: false
-    },
-    "vmob": {
-        type: VideoSchema,
-        required: false
-    },
-    "imob": {
-        type: ImageSchema,
-        required: false
-    },
-    "amob": {
-        type: AudioSchema,
-        required: false
-    }
-});
-
-const MaxOnScreen = new mongoose.Schema({
-    "audio": Number,
-    "image": Number,
-    "video": Number,
-    "text": Number
-});
-
-const MediaSceneSchema = new mongoose.Schema({
-    name: String,
-    maximumOnScreen: MaxOnScreen,
-    scene: [MediaAsset],
-});
+const yamljs = require('yamljs');
 
 /**
  * Example of Open API 2.0 output we can use for visual confirmation
@@ -83,16 +15,23 @@ const MediaSceneSchema = new mongoose.Schema({
  * https://github.com/OAI/OpenAPI-Specification/blob/master/examples/v2.0/json/petstore-with-external-docs.json
  */
 const schemaName = "MediaSceneSchema";
+const MediaSceneSchema = require('uos-mf-db-schemas/src/media-scenes/media-scene-schema');
 const swaggerSchema = m2s(MediaSceneSchema, schemaName);
 
 const swaggerModelDefinitions = {
     "definitions": swaggerSchema
 };
 
-fs.writeFile('./db-schema-json-docs/media-scene-schema.json', JSON.stringify(swaggerModelDefinitions), 'utf8', function() {
+fs.writeFile('./db-schema-json-docs/media-scene-schema-0.0.1.json', JSON.stringify(swaggerModelDefinitions), 'utf8', function() {
     console.log("media-scene-schema.json - record file created");
-    process.exit(1);
+
+    fs.writeFile('./db-schema-json-docs/media-scene-schema-0.0.1.yaml', yamljs.stringify(swaggerModelDefinitions), 'utf8', function() {
+        console.log("media-scene-schema.yaml - record file created");
+        process.exit(1);
+    });
 });
+
+
 
 
 
