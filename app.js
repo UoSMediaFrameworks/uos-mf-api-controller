@@ -12,6 +12,7 @@ const options = {
             title: 'uos-legacy-hub-controller', // Title (required)
             version: '0.0.2', // Version (required)
         },
+        "host": "dev-uos-mf-api.eu-west-1.elasticbeanstalk.com"
     },
     apis: ['./src/mf-api-controller.js', './db-schema-json-docs/media-scene-schema.yaml'], // Path to the API docs
 };
