@@ -14,7 +14,7 @@ const options = {
         },
         "host": "dev-uos-mf-api.eu-west-1.elasticbeanstalk.com"
     },
-    apis: ['./src/mf-api-controller.js', './db-schema-json-docs/media-scene-schema.yaml'], // Path to the API docs
+    apis: ['./src/mf-api-controller.js', './db-schema-json-docs/db-schema.yaml'], // Path to the API docs
 };
 const swaggerSpec = swaggerJSDoc(options);
 const appConf = new SwaggerSpecConfiguration(swaggerSpec);

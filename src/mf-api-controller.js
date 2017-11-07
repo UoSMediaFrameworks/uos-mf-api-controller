@@ -208,6 +208,15 @@ class MediaframeApiController extends MediaframeworkHubController {
              *      items:
              *          $ref: '#/definitions/MediaSceneSchema'
              *
+             *  MediaTransitioning:
+             *      type: object
+             *      schema:
+             *          $ref: '#/definitions/MediaAssetSchema'
+             *
+             *  MediaDone:
+             *      type: object
+             *      schema:
+             *          $ref: '#/definitions/MediaAssetSchema'
              */
 
             /**
@@ -581,6 +590,85 @@ class MediaframeApiController extends MediaframeworkHubController {
                 // 2. Create asset store API request lib
             });
 
+            /**
+             * @swagger
+             * /playback/media/transitioning:
+             *  post:
+             *      description: When a client begins transitioning a piece of media
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: transitioning
+             *            description: the media object being transitioned by a client
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/MediaTransitioning'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             */
+            self.router.post('/playback/media/transitioning', function(req, res) {
+                res.json({ack: true});
+            });
+
+            /**
+             * @swagger
+             * /playback/media/done:
+             *  post:
+             *      description: When a client begins transitioning a piece of media
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: finished
+             *            description: the media object finished by a client
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/MediaDone'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             */
+            self.router.post('/playback/media/done', function(req, res) {
+                res.json({ack: true});
+            });
+
+            /**
+             * @swagger
+             * /playback/iot/data:
+             *  post:
+             *      description: When a client begins transitioning a piece of media
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             */
+            self.router.post('/playback/iot/data', function(req, res) {
+                res.json({ack: true});
+            });
+
             const API_KEY_HEADER = "X-API-Key";
             const API_GROUP_ID_KEY = "X-API-GroupID";
 
@@ -642,6 +730,10 @@ class MediaframeApiController extends MediaframeworkHubController {
         socket.on("/scene/list", function(data, callback){});
         socket.on("/scene/find/by/name", function(data, callback){});
         socket.on("/scene/full", function(data, callback){});
+
+        socket.on("/playback/media/transitioning", function(data, callback){});
+        socket.on("/playback/media/done", function(data, callback){});
+        socket.on("/playback/iot/data", function(data, callback){});
     }
 }
 

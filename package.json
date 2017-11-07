@@ -1,6 +1,6 @@
 {
   "name": "uos-mf-api",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "main": "app.js",
   "scripts": {
@@ -23,6 +23,7 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
+    "lodash": "^4.17.4",
     "mongoose": "^4.12.4",
     "swagger-jsdoc": "^1.9.7",
     "swagger-ui-dist": "^3.3.2",

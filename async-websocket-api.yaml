@@ -39,8 +39,35 @@ topics:
     publish:
       $ref: '#/components/messages/sceneThemeShow'
 
+  event.playback.media.transition:
+    publish:
+      $ref: '#/components/messages/mediaTransition'
+
+  event.playback.media.done:
+    publish:
+      $ref: '#/components/messages/mediaDone'
+
+  event.iot.data:
+    publish:
+      $ref: '#/components/messages/iotData'
+
 components:
   messages:
+    iotData:
+      summary: Allow a client to receive schemaless iot data
+      payload:
+        $ref: "#/components/schemas/iotData"
+
+    mediaTransition:
+      summary: Request a client to transition a piece of media
+      payload:
+        $ref: "#/components/schemas/mediaAsset"
+
+    mediaDone:
+      summary: Request a client to end a piece of media
+      payload:
+        $ref: "#/components/schemas/mediaAsset"
+
     auth:
       summary: Required by a client to authenticate with the web sockets
       payload:
@@ -64,7 +91,7 @@ components:
     mediaShow:
       summary: Receive an update to start showing a media object
       payload:
-        $ref: "#/components/schemas/mediaShowPayload"
+        $ref: "#/components/schemas/mediaAsset"
 
     themeShow:
       summary: Receive an update to start showing theme
@@ -94,6 +121,9 @@ components:
   ## I think we will need to keep the primary namespace for client registration to individual pipes of messages.
   ## while the contents of the messages are always the same namespaces and schemas.
   schemas:
+
+    iotData:
+      type: object
 
     sceneShowPayload:
       type: object
@@ -129,7 +159,7 @@ components:
     subscribePayload:
       type: string
 
-    mediaShowPayload:
+    mediaAsset:
       type: object
       required:
         - _id
