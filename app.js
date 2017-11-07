@@ -9,8 +9,8 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const options = {
     swaggerDefinition: {
         info: {
-            title: 'uos-legacy-hub-controller', // Title (required)
-            version: '0.0.2', // Version (required)
+            title: 'uos-mf-api-controller', // Title (required)
+            version: '0.0.3', // Version (required)
         },
         "host": "dev-uos-mf-api.eu-west-1.elasticbeanstalk.com"
     },
