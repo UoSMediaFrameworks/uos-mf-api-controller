@@ -54,7 +54,7 @@ Building from deployed environment requires an adjustment of the URL.
 
 ```bash
 java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i <host:port>/api-docs.json -l csharp -o dist/uwp_api_client_<version>
-java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/uwp_api_client_0.0.2rc1
+java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/uwp_api_client_0.0.3rc1
 ```
 
 ## TODO Building a nodejs client

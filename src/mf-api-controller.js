@@ -217,6 +217,9 @@ class MediaframeApiController extends MediaframeworkHubController {
              *      type: object
              *      schema:
              *          $ref: '#/definitions/MediaAssetSchema'
+             *
+             *  Data:
+             *      type: object
              */
 
             /**
@@ -657,6 +660,11 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          - application/json
              *      parameters:
              *          - in: body
+             *            name: data
+             *            description: a schemaless data object from an IoT device
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/Data'
              *      security:
              *          - APIKeyHeader: []
              *      responses:
