@@ -406,7 +406,15 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/playback/scene/show', function(req, res){});
+            self.router.post('/playback/scene/show', function(req, res) {
+
+                console.log("/playback/scene/show");
+                console.log(req.body);
+
+                self.commandAPIController.playSceneAndThemes(req.body.roomId, {scenes: [req.body.play], themes: []}, function() {
+                    res.json({ack: true});
+                });
+            });
 
             /**
              * @swagger
@@ -432,7 +440,15 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/playback/scene/theme/show', function(req, res){});
+            self.router.post('/playback/scene/theme/show', function(req, res) {
+
+                console.log("/playback/scene/show");
+                console.log(req.body);
+
+                self.commandAPIController.playSceneAndThemes(req.body.roomId, {scenes: [req.body.play.scene], themes: [req.body.play.theme]}, function() {
+                    res.json({ack: true});
+                });
+            });
 
             /**
              * @swagger
@@ -692,6 +708,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
                 if(!token) {
                     console.log("requireToken - check missing token in request header");
+                    // APEP TODO send error message
                     return res.sendStatus(401);
                 }
 
@@ -701,6 +718,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                 self.mediaHubConnection.hub.emit("authProvider", creds, function(err, token, roomId, groupId) {
                     if(err) {
                         console.log(`requireToken - check error: ${err}`);
+                        // APEP TODO send error message
                         res.sendStatus(401);
                     } else {
                         console.log(`requireToken - check successful - groupId: ${groupId}`);
