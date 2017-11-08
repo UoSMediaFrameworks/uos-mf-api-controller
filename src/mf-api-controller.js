@@ -88,15 +88,9 @@ class MediaframeApiController extends MediaframeworkHubController {
              *  Theme:
              *      type: string
              *
-             *  Play:
+             *  PlayScenesAndThemes:
              *      type: object
-             *      required:
-             *          - scenes
-             *          - themes
-             *          - roomId
              *      properties:
-             *          roomId:
-             *              type: string
              *          scenes:
              *              type: array
              *              items:
@@ -105,6 +99,18 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              type: array
              *              items:
              *                  $ref: '#/definitions/Theme'
+             *
+             *  Play:
+             *      type: object
+             *      required:
+             *          - play
+             *          - roomId
+             *      properties:
+             *          roomId:
+             *              type: string
+             *          play:
+             *              type: object
+             *              $ref: '#/definitions/PlayScenesAndThemes'
              *
              *  PlayScenes:
              *      type: object
@@ -130,8 +136,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              description: The playback room
              *          scene:
              *              type: object
-             *              schema:
-             *                  $ref: '#/definitions/Scene'
+             *              $ref: '#/definitions/Scene'
              *
              *  PlayMedia:
              *      type: object
@@ -143,8 +148,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              type: string
              *          media:
              *              type: object
-             *              schema:
-             *                  $ref: '#/definitions/Media'
+             *              $ref: '#/definitions/Media'
              *
              *  Password:
              *      type: object
@@ -171,8 +175,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              type: string
              *          sceneTheme:
              *              type: object
-             *              schema:
-             *                  $ref: '#/definitions/SceneTheme'
+             *              $ref: '#/definitions/SceneTheme'
              *
              *  SceneTheme:
              *      type: object
@@ -196,8 +199,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              type: string
              *          theme:
              *              type: object
-             *              schema:
-             *                  $ref: '#/definitions/Theme'
+             *              $ref: '#/definitions/Theme'
              *
              *  SetTagMatcher:
              *      type: string
@@ -210,13 +212,11 @@ class MediaframeApiController extends MediaframeworkHubController {
              *
              *  MediaTransitioning:
              *      type: object
-             *      schema:
-             *          $ref: '#/definitions/MediaAssetSchema'
+             *      $ref: '#/definitions/MediaAssetSchema'
              *
              *  MediaDone:
              *      type: object
-             *      schema:
-             *          $ref: '#/definitions/MediaAssetSchema'
+             *      $ref: '#/definitions/MediaAssetSchema'
              *
              *  Data:
              *      type: object
@@ -709,7 +709,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                 if(!token) {
                     console.log("requireToken - check missing token in request header");
                     // APEP TODO send error message
-                    return res.sendStatus(401);
+                    return res.status(401).send("check missing token in request header");
                 }
 
                 // APEP we have a token, we need to check with the media hub if this is cool
@@ -718,8 +718,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                 self.mediaHubConnection.hub.emit("authProvider", creds, function(err, token, roomId, groupId) {
                     if(err) {
                         console.log(`requireToken - check error: ${err}`);
-                        // APEP TODO send error message
-                        res.sendStatus(401);
+                        return res.status(401).send("error checking with auth provider");
                     } else {
                         console.log(`requireToken - check successful - groupId: ${groupId}`);
 

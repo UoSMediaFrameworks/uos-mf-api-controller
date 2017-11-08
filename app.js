@@ -12,7 +12,7 @@ const options = {
             title: 'uos-mf-api-controller', // Title (required)
             version: '0.0.3', // Version (required)
         },
-        "host": "dev-uos-mf-api.eu-west-1.elasticbeanstalk.com"
+        "host": process.env.SWAGGER_HOST || "http://localhost:3000"
     },
     apis: ['./src/mf-api-controller.js', './db-schema-json-docs/db-schema.yaml'], // Path to the API docs
 };
