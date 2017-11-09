@@ -256,7 +256,8 @@ class MediaframeApiController extends MediaframeworkHubController {
              */
             self.app.post('/auth/token/get', function(req, res) {
                 const creds = {password: req.body.password};
-                self.mediaHubConnection.hub.emit("authProvider", creds, function(err, token, roomId, groupId) {
+
+                self.mediaHubConnection.attemptClientAuth(creds, function(err, token, roomId, groupId) {
                     if(err) {
                         res.status(400).send({message: err});
                     } else {
@@ -731,7 +732,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                 // APEP we have a token, we need to check with the media hub if this is cool
                 const creds = {token: token};
 
-                self.mediaHubConnection.hub.emit("authProvider", creds, function(err, token, roomId, groupId) {
+                self.mediaHubConnection.attemptClientAuth(creds, function(err, token, roomId, groupId) {
                     if(err) {
                         console.log(`requireToken - check error: ${err}`);
                         return res.status(401).send({message: "error checking with auth provider"});
