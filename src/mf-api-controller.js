@@ -220,6 +220,12 @@ class MediaframeApiController extends MediaframeworkHubController {
              *
              *  Data:
              *      type: object
+             *
+             *  ErrorMessage:
+             *      type: object
+             *      properties:
+             *          message:
+             *              type: string
              */
 
             /**
@@ -243,12 +249,16 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              description: Valid session token given
              *              schema:
              *                  $ref: '#/definitions/SessionResult'
+             *          400:
+             *              description: An error from getting a token
+             *              schema:
+             *                  $ref: '#/definitions/ErrorMessage'
              */
             self.app.post('/auth/token/get', function(req, res) {
                 const creds = {password: req.body.password};
                 self.mediaHubConnection.hub.emit("authProvider", creds, function(err, token, roomId, groupId) {
                     if(err) {
-                        res.sendStatus(400);
+                        res.status(400).send({message: err});
                     } else {
                         res.json({token: token, roomId: roomId, groupId: groupId});
                     }
@@ -715,7 +725,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                 if(!token) {
                     console.log("requireToken - check missing token in request header");
                     // APEP TODO send error message
-                    return res.status(401).send("check missing token in request header");
+                    return res.status(401).send({message: "check missing token in request header"});
                 }
 
                 // APEP we have a token, we need to check with the media hub if this is cool
@@ -724,7 +734,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                 self.mediaHubConnection.hub.emit("authProvider", creds, function(err, token, roomId, groupId) {
                     if(err) {
                         console.log(`requireToken - check error: ${err}`);
-                        return res.status(401).send("error checking with auth provider");
+                        return res.status(401).send({message: "error checking with auth provider"});
                     } else {
                         console.log(`requireToken - check successful - groupId: ${groupId}`);
 
