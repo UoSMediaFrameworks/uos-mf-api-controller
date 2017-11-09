@@ -12,7 +12,8 @@ const options = {
             title: 'uos-mf-api-controller', // Title (required)
             version: '0.0.3', // Version (required)
         },
-        "host": process.env.SWAGGER_HOST || "http://localhost:3000"
+        "host": process.env.SWAGGER_HOST || "localhost:3000",
+        "schemes": ["http"]
     },
     apis: ['./src/mf-api-controller.js', './db-schema-json-docs/db-schema.yaml'], // Path to the API docs
 };

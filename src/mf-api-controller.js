@@ -278,14 +278,20 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              description: Acknowledgement
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
+             *          400:
+             *              description : An error
              */
             self.router.post('/playback/scenes/themes/show', function(req, res){
 
                 console.log("/playback/scenes/themes/show");
                 console.log(req.body);
 
-                self.commandAPIController.playSceneAndThemes(req.body.roomId, req.body, function(){
-                    res.json({ack: true});
+                self.commandAPIController.playSceneAndThemes(req.body.roomId, req.body.play, function(err) {
+                    if(err) {
+                        res.status(400).send(err);
+                    } else {
+                        res.json({ack: true});
+                    }
                 });
             });
 
