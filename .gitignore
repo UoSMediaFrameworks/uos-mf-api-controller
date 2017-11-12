@@ -12,3 +12,4 @@ node_modules/
 /dev-env.sh
 
 dist/
+/test/test-env.sh

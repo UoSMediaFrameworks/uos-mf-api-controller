@@ -26,6 +26,7 @@
     "lodash": "^4.17.4",
     "mongoose": "^4.12.4",
     "morgan": "^1.9.0",
+    "swagger-client": "^3.3.2",
     "swagger-jsdoc": "^1.9.7",
     "swagger-ui-dist": "^3.3.2",
     "uos-legacy-hub-controller": "uosmediaframeworks/uos-legacy-hub-controller",

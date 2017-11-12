@@ -65,6 +65,7 @@ java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i http://de
 ```bash
 java -jar swagger-codegen-cli-2.2.3.jar generate -i <host:port>/api-docs.json -l javascript -o dist/js_api_client_<version>
 java -jar swagger-codegen-cli-2.2.3.jar generate -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l javascript -o dist/js_api_client_0_0_3rc6
+java -jar swagger-codegen-cli-2.2.3.jar generate -i http://localhost:3000/api-docs.json -l javascript -o dist/js_api_client_0_0_3rc6
 ```
 
 ## Async API
