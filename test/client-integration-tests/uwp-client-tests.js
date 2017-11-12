@@ -4,7 +4,7 @@
  *
  (timer and iterator)
  (done) /scene/list - receive the scene list
- /scene/full - receive the full scene with DB objects (this is not implemented in the API so I'll have to do that)
+ (done) /scene/full - receive the full scene with DB objects (this is not implemented in the API so I'll have to do that)
  (done) /playback/media/show - tell clients to show a piece of media
  (done) /playback/media/transitioning - tell the API to transition a piece of media
  (done) /playback/media/done  - tell the API to finish a piece of media
@@ -42,6 +42,22 @@ describe("UWP Client Testing", function () {
 
     describe("JSClient", function () {
 
+        function setupTestWithLogin(self, done) {
+            Swagger('http://localhost:3000/api-docs.json')
+                .then(function (authClient) {
+                    authClient.execute(authOp)
+                        .then(function (res) {
+                            var authResult = res.body;
+                            assert(authResult.token);
+                            assert(authResult.roomId);
+                            assert(authResult.groupId === '0');
+                            self.token = authResult.token;
+                            self.client = authClient;
+                            done();
+                        });
+                });
+        }
+
         describe("Auth", function () {
 
             before(function (done) {
@@ -65,36 +81,25 @@ describe("UWP Client Testing", function () {
             });
         });
 
-        describe("ListingScenes", function () {
+        function getSceneListOp(token) {
+            return {
+                url: '/scene/list',
+                pathName: '/scene/list',
+                method: "GET",
+                requestInterceptor: function (req) {
+                    req.headers["x-api-key"] = token;
+                    return req;
+                }
+            };
+        }
+
+        describe("/scene/list", function () {
             before(function (done) {
-                var self = this;
-                Swagger('http://localhost:3000/api-docs.json')
-                    .then(function (authClient) {
-                        authClient.execute(authOp)
-                            .then(function (res) {
-                                var authResult = res.body;
-                                assert(authResult.token);
-                                assert(authResult.roomId);
-                                assert(authResult.groupId === '0');
-                                self.token = authResult.token;
-                                self.client = authClient;
-                                done();
-                            });
-                    });
+                setupTestWithLogin(this, done);
             });
 
-            it('"/scene/list", returns a scene list', function (done) {
-                var self = this;
-
-                const sceneListOp = {
-                    url: '/scene/list',
-                    pathName: '/scene/list',
-                    method: "GET",
-                    requestInterceptor: function (req) {
-                        req.headers["x-api-key"] = self.token;
-                        return req;
-                    }
-                };
+            it('"/scene/list", returns <scene list>', function (done) {
+                const sceneListOp = getSceneListOp(this.token);
 
                 this.client.execute(sceneListOp)
                     .then(function (res) {
@@ -102,6 +107,51 @@ describe("UWP Client Testing", function () {
                         assert(Array.isArray(sceneList));
                         assert(sceneList[0].hasOwnProperty("_id"));
                         assert(sceneList[0].hasOwnProperty("_groupID"));
+                        done();
+                    });
+            });
+        });
+
+        describe("/scene/full", function() {
+            before(function(done) {
+                var self = this;
+                setupTestWithLogin(this, function() {
+                    const sceneListOp = getSceneListOp(self.token);
+
+                    // APEP find a valid scene from the scene list
+                    self.client.execute(sceneListOp)
+                        .then(function (res) {
+                            const sceneList = res.body;
+                            assert(Array.isArray(sceneList));
+                            assert(sceneList[0].hasOwnProperty("_id"));
+                            assert(sceneList[0].hasOwnProperty("_groupID"));
+                            self.sceneList = sceneList;
+                            done();
+                        });
+                });
+            });
+
+            it('"/scene/full", returns <full scene>', function(done) {
+                this.timeout = 4000;
+                var self = this;
+                const sceneFullOp = {
+                    url: '/scene/full',
+                    pathName: '/scene/full',
+                    method: "GET",
+                    parameters: {
+                        sceneId: self.sceneList[0]._id
+                    },
+                    requestInterceptor: function (req) {
+                        req.headers["x-api-key"] = self.token;
+                        return req;
+                    }
+                };
+
+                this.client.execute(sceneFullOp)
+                    .then(function (res) {
+                        const fullScene = JSON.parse(res.body);
+                        assert(fullScene);
+                        assert(fullScene._id === self.sceneList[0]._id);
                         done();
                     });
             });
@@ -148,7 +198,6 @@ describe("UWP Client Testing", function () {
 
             it('WS client can register to a room and receive updates', function (done) {
                 const validCreds = {token: this.token};
-                const roomId = "test01";
                 const mediaObject = {_id: "yacn"};
                 const controllerClient = SocketIOClient("http://localhost:3000");
 

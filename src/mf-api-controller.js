@@ -6,6 +6,8 @@ const DataController = require("uos-legacy-hub-controller/src/modules/controller
 const CommandAPIController = require("./controllers/command-api-controller");
 const SubscribeController = require("uos-legacy-hub-controller/src/modules/controllers/subscribe-controller");
 
+const request = require("request");
+
 class MediaframeApiController extends MediaframeworkHubController {
 
     constructor(config) {
@@ -15,14 +17,14 @@ class MediaframeApiController extends MediaframeworkHubController {
     init(callback) {
         const self = this;
 
-        this.mediaHubConnection.tryConnect(function() {
+        this.mediaHubConnection.tryConnect(function () {
 
             self.dataController = new DataController(self.mediaHubConnection.hub, self.io);
             self.commandAPIController = new CommandAPIController(self.mediaHubConnection.hub, self.io);
             self.subscribeController = new SubscribeController();
 
             // APEP define a public route for the API documentation
-            self.app.get('/api-docs.json', function(req, res) {
+            self.app.get('/api-docs.json', function (req, res) {
                 res.json(self.config.swaggerSpec);
             });
 
@@ -256,11 +258,11 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ErrorMessage'
              */
-            self.app.post('/auth/token/get', function(req, res) {
+            self.app.post('/auth/token/get', function (req, res) {
                 const creds = {password: req.body.password};
 
-                self.mediaHubConnection.attemptClientAuth(creds, function(err, token, roomId, groupId) {
-                    if(err) {
+                self.mediaHubConnection.attemptClientAuth(creds, function (err, token, roomId, groupId) {
+                    if (err) {
                         res.status(400).send({message: err});
                     } else {
                         res.json({token: token, roomId: roomId, groupId: groupId});
@@ -294,13 +296,13 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          400:
              *              description : An error
              */
-            self.router.post('/playback/scenes/themes/show', function(req, res){
+            self.router.post('/playback/scenes/themes/show', function (req, res) {
 
                 console.log("/playback/scenes/themes/show");
                 console.log(req.body);
 
-                self.commandAPIController.playSceneAndThemes(req.body.roomId, req.body.play, function(err) {
-                    if(err) {
+                self.commandAPIController.playSceneAndThemes(req.body.roomId, req.body.play, function (err) {
+                    if (err) {
                         res.status(400).send(err);
                     } else {
                         res.json({ack: true});
@@ -332,12 +334,15 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/playback/scenes/show', function(req, res) {
+            self.router.post('/playback/scenes/show', function (req, res) {
 
                 console.log("/playback/scenes/show");
                 console.log(req.body);
 
-                self.commandAPIController.playSceneAndThemes(req.body.roomId, {scenes: req.body.scenes, themes: []}, function() {
+                self.commandAPIController.playSceneAndThemes(req.body.roomId, {
+                    scenes: req.body.scenes,
+                    themes: []
+                }, function () {
                     res.json({ack: true});
                 });
             });
@@ -366,7 +371,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/playback/media/show', function(req, res) {
+            self.router.post('/playback/media/show', function (req, res) {
                 console.log("/playback/media/show request made - body: ", req.body);
                 self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.show", req.body.media);
                 res.json({ack: true});
@@ -396,7 +401,8 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/SceneThemes'
              */
-            self.router.get('/playback/scenes/themes/permutations', function(req, res){});
+            self.router.get('/playback/scenes/themes/permutations', function (req, res) {
+            });
 
             /**
              * @swagger
@@ -422,12 +428,15 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/playback/scene/show', function(req, res) {
+            self.router.post('/playback/scene/show', function (req, res) {
 
                 console.log("/playback/scene/show");
                 console.log(req.body);
 
-                self.commandAPIController.playSceneAndThemes(req.body.roomId, {scenes: [req.body.play], themes: []}, function() {
+                self.commandAPIController.playSceneAndThemes(req.body.roomId, {
+                    scenes: [req.body.play],
+                    themes: []
+                }, function () {
                     res.json({ack: true});
                 });
             });
@@ -456,12 +465,15 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/playback/scene/theme/show', function(req, res) {
+            self.router.post('/playback/scene/theme/show', function (req, res) {
 
                 console.log("/playback/scene/show");
                 console.log(req.body);
 
-                self.commandAPIController.playSceneAndThemes(req.body.roomId, {scenes: [req.body.play.scene], themes: [req.body.play.theme]}, function() {
+                self.commandAPIController.playSceneAndThemes(req.body.roomId, {
+                    scenes: [req.body.play.scene],
+                    themes: [req.body.play.theme]
+                }, function () {
                     res.json({ack: true});
                 });
             });
@@ -490,7 +502,8 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/playback/theme/show', function(req, res){});
+            self.router.post('/playback/theme/show', function (req, res) {
+            });
 
             /**
              * @swagger
@@ -516,7 +529,8 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/playback/tag/matcher/set', function(req, res){});
+            self.router.post('/playback/tag/matcher/set', function (req, res) {
+            });
 
             /**
              * @swagger
@@ -537,13 +551,13 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          400:
              *              description: Database error
              */
-            self.router.get('/scene/list', function(req, res) {
+            self.router.get('/scene/list', function (req, res) {
 
                 const groupId = res.locals[API_GROUP_ID_KEY];
 
                 console.log(`/scene/list - groupId: ${groupId}`);
 
-                self.dataController.listScenes(groupId, function(err, scenes){
+                self.dataController.listScenes(groupId, function (err, scenes) {
                     if (err) {
                         return res.sendStatus(400);
                     } else {
@@ -578,14 +592,14 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          400:
              *              description: Database error
              */
-            self.router.get('/scene/find/by/name', function(req, res) {
+            self.router.get('/scene/find/by/name', function (req, res) {
 
                 const sceneName = req.get("sceneName");
 
                 console.log(`scene/find/by/name  - sceneName: ${sceneName}`);
 
-                self.dataController.loadSceneByName(sceneName, function(err, scene) {
-                    if(err) {
+                self.dataController.loadSceneByName(sceneName, function (err, scene) {
+                    if (err) {
                         return res.status(400);
                     } else {
                         return res.status(200).send(scene);
@@ -619,10 +633,19 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          400:
              *              description: Database error
              */
-            self.router.get('/scene/full', function(req, res) {
-                // APEP TODO
-                // 1. Move the asset store API into hub
-                // 2. Create asset store API request lib
+            self.router.get('/scene/full', function (req, res) {
+                console.log({sceneId: req.get("sceneId"), token: req.get(API_KEY_HEADER)});
+                request
+                    .post({
+                        url: process.env.ASSET_STORE,
+                        formData: {sceneId: req.get("sceneId"), token: req.get(API_KEY_HEADER)}
+                    }, function (err, httpResponse, body) {
+                        if (err) {
+                            return res.status(400).json({message: JSON.stringify(err)});
+                        }
+
+                        res.status(200).json(body);
+                    });
             });
 
             /**
@@ -649,7 +672,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/playback/media/transitioning', function(req, res) {
+            self.router.post('/playback/media/transitioning', function (req, res) {
                 console.log("/playback/media/transitioning request made - body: ", req.body);
                 self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.transition", req.body.media);
                 res.json({ack: true});
@@ -679,7 +702,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/playback/media/done', function(req, res) {
+            self.router.post('/playback/media/done', function (req, res) {
                 console.log("/playback/media/done request made - body: ", req.body);
                 self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.done", req.body.media);
                 res.json({ack: true});
@@ -709,7 +732,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            self.router.post('/playback/iot/data', function(req, res) {
+            self.router.post('/playback/iot/data', function (req, res) {
                 res.json({ack: true});
             });
 
@@ -726,7 +749,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
                 const token = req.get(API_KEY_HEADER);
 
-                if(!token) {
+                if (!token) {
                     console.log("requireToken - check missing token in request header");
                     // APEP TODO send error message
                     return res.status(401).send({message: "check missing token in request header"});
@@ -735,8 +758,8 @@ class MediaframeApiController extends MediaframeworkHubController {
                 // APEP we have a token, we need to check with the media hub if this is cool
                 const creds = {token: token};
 
-                self.mediaHubConnection.attemptClientAuth(creds, function(err, token, roomId, groupId) {
-                    if(err) {
+                self.mediaHubConnection.attemptClientAuth(creds, function (err, token, roomId, groupId) {
+                    if (err) {
                         console.log(`requireToken - check error: ${err}`);
                         return res.status(401).send({message: "error checking with auth provider"});
                     } else {
@@ -753,7 +776,7 @@ class MediaframeApiController extends MediaframeworkHubController {
             // APEP host the playback API behind require pass key token security
             self.app.use(requireToken, self.router);
 
-            if(callback)
+            if (callback)
                 callback();
         });
     }
@@ -761,28 +784,42 @@ class MediaframeApiController extends MediaframeworkHubController {
     clientSocketSuccessfulAuth(socket) {
         var self = this;
 
-        socket.on("register", function(roomId){
+        socket.on("register", function (roomId) {
             self.subscribeController.register(socket, roomId);
         });
 
         // APEP TODO implement socket version of REST api
-        socket.on("/playback/scenes/themes/show", function(data, callback){});
-        socket.on("/playback/scenes/show", function(data, callback){});
-        socket.on("/playback/media/show", function(data, callback){});
+        socket.on("/playback/scenes/themes/show", function (data, callback) {
+        });
+        socket.on("/playback/scenes/show", function (data, callback) {
+        });
+        socket.on("/playback/media/show", function (data, callback) {
+        });
 
-        socket.on("/playback/scenes/themes/permutations", function(data, callback){});
-        socket.on("/playback/scene/show", function(data, callback){});
-        socket.on("/playback/scene/theme/show", function(data, callback){});
-        socket.on("/playback/theme/show", function(data, callback){});
-        socket.on("/playback/tag/matcher/set", function(data, callback){});
+        socket.on("/playback/scenes/themes/permutations", function (data, callback) {
+        });
+        socket.on("/playback/scene/show", function (data, callback) {
+        });
+        socket.on("/playback/scene/theme/show", function (data, callback) {
+        });
+        socket.on("/playback/theme/show", function (data, callback) {
+        });
+        socket.on("/playback/tag/matcher/set", function (data, callback) {
+        });
 
-        socket.on("/scene/list", function(data, callback){});
-        socket.on("/scene/find/by/name", function(data, callback){});
-        socket.on("/scene/full", function(data, callback){});
+        socket.on("/scene/list", function (data, callback) {
+        });
+        socket.on("/scene/find/by/name", function (data, callback) {
+        });
+        socket.on("/scene/full", function (data, callback) {
+        });
 
-        socket.on("/playback/media/transitioning", function(data, callback){});
-        socket.on("/playback/media/done", function(data, callback){});
-        socket.on("/playback/iot/data", function(data, callback){});
+        socket.on("/playback/media/transitioning", function (data, callback) {
+        });
+        socket.on("/playback/media/done", function (data, callback) {
+        });
+        socket.on("/playback/iot/data", function (data, callback) {
+        });
     }
 }
 
