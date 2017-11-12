@@ -64,20 +64,26 @@ describe("UWP Client Testing", function () {
                 var self = this;
                 Swagger('http://localhost:3000/api-docs.json')
                     .then(function (client) {
+                        // console.log(client);
                         self.client = client;
                         done();
                     });
             });
 
             it('"auth/token/get", <valid creds>', function (done) {
-                this.client.execute(authOp)
+
+                this
+                    .client
+                    .apis
+                    .default
+                    .post_auth_token_get({creds: {password: process.env.HUB_PASSWORD}})
                     .then(function (res) {
                         var authResult = res.body;
                         assert(authResult.token);
                         assert(authResult.roomId);
                         assert(authResult.groupId === '0');
                         done();
-                    });
+                    })
             });
         });
 
@@ -112,10 +118,10 @@ describe("UWP Client Testing", function () {
             });
         });
 
-        describe("/scene/full", function() {
-            before(function(done) {
+        describe("/scene/full", function () {
+            before(function (done) {
                 var self = this;
-                setupTestWithLogin(this, function() {
+                setupTestWithLogin(this, function () {
                     const sceneListOp = getSceneListOp(self.token);
 
                     // APEP find a valid scene from the scene list
@@ -131,7 +137,7 @@ describe("UWP Client Testing", function () {
                 });
             });
 
-            it('"/scene/full", returns <full scene>', function(done) {
+            it('"/scene/full", returns <full scene>', function (done) {
                 this.timeout = 4000;
                 var self = this;
                 const sceneFullOp = {
