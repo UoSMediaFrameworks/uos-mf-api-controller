@@ -18,6 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "mongoose-to-swagger": "aaronpcz/mongoose-to-swagger",
+    "socket.io-client": "^2.0.4",
     "yamljs": "^0.3.0"
   },
   "dependencies": {

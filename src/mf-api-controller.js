@@ -3,7 +3,8 @@
 const MediaframeworkHubController = require("./mf-hub-controller");
 
 const DataController = require("uos-legacy-hub-controller/src/modules/controllers/data-controller");
-const CommandAPIController = require("uos-legacy-hub-controller/src/modules/controllers/command-api-controller");
+const CommandAPIController = require("./controllers/command-api-controller");
+const SubscribeController = require("uos-legacy-hub-controller/src/modules/controllers/subscribe-controller");
 
 class MediaframeApiController extends MediaframeworkHubController {
 
@@ -18,6 +19,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             self.dataController = new DataController(self.mediaHubConnection.hub, self.io);
             self.commandAPIController = new CommandAPIController(self.mediaHubConnection.hub, self.io);
+            self.subscribeController = new SubscribeController();
 
             // APEP define a public route for the API documentation
             self.app.get('/api-docs.json', function(req, res) {
@@ -365,11 +367,8 @@ class MediaframeApiController extends MediaframeworkHubController {
              *                  $ref: '#/definitions/ApiAck'
              */
             self.router.post('/playback/media/show', function(req, res) {
-
-                console.log("/playback/media/show");
-                console.log(req.body);
-
-                self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.show", req.body.play);
+                console.log("/playback/media/show request made - body: ", req.body);
+                self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.show", req.body.media);
                 res.json({ack: true});
             });
 
@@ -651,6 +650,8 @@ class MediaframeApiController extends MediaframeworkHubController {
              *                  $ref: '#/definitions/ApiAck'
              */
             self.router.post('/playback/media/transitioning', function(req, res) {
+                console.log("/playback/media/transitioning request made - body: ", req.body);
+                self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.transition", req.body.media);
                 res.json({ack: true});
             });
 
@@ -679,6 +680,8 @@ class MediaframeApiController extends MediaframeworkHubController {
              *                  $ref: '#/definitions/ApiAck'
              */
             self.router.post('/playback/media/done', function(req, res) {
+                console.log("/playback/media/done request made - body: ", req.body);
+                self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.done", req.body.media);
                 res.json({ack: true});
             });
 
@@ -757,6 +760,10 @@ class MediaframeApiController extends MediaframeworkHubController {
 
     clientSocketSuccessfulAuth(socket) {
         var self = this;
+
+        socket.on("register", function(roomId){
+            self.subscribeController.register(socket, roomId);
+        });
 
         // APEP TODO implement socket version of REST api
         socket.on("/playback/scenes/themes/show", function(data, callback){});
