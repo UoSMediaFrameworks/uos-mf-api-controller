@@ -169,7 +169,7 @@ describe("UWP Client Testing", function () {
 
                 this.client.execute(sceneFullOp)
                     .then(function (res) {
-                        const fullScene = JSON.parse(res.body);
+                        const fullScene = res.body;
                         assert(fullScene);
                         assert(fullScene._id === self.sceneList[0]._id);
                         done();

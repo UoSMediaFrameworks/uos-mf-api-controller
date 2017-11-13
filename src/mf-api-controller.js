@@ -44,24 +44,6 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          ack:
              *              type: string
              *
-             *  Media:
-             *      type: object
-             *      required:
-             *          - _id
-             *          - tags
-             *          - type
-             *      properties:
-             *          _id:
-             *              type: string
-             *          tags:
-             *              type: string
-             *          text:
-             *              type: string
-             *          url:
-             *              type: string
-             *          type:
-             *              type: string
-             *
              *  SceneId:
              *      type: object
              *      required:
@@ -142,18 +124,6 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              type: object
              *              $ref: '#/definitions/Scene'
              *
-             *  PlayMedia:
-             *      type: object
-             *      required:
-             *          - media
-             *          - roomId
-             *      properties:
-             *          roomId:
-             *              type: string
-             *          media:
-             *              type: object
-             *              $ref: '#/definitions/Media'
-             *
              *  Password:
              *      type: object
              *      required:
@@ -228,13 +198,17 @@ class MediaframeApiController extends MediaframeworkHubController {
              *      items:
              *          $ref: '#/definitions/MediaSceneForListSchema'
              *
-             *  MediaTransitioning:
+             *  MediaCommand:
              *      type: object
-             *      $ref: '#/definitions/MediaAssetSchema'
-             *
-             *  MediaDone:
-             *      type: object
-             *      $ref: '#/definitions/MediaAssetSchema'
+             *      required:
+             *          - media
+             *          - roomId
+             *      properties:
+             *          roomId:
+             *              type: string
+             *          media:
+             *              type: object
+             *              $ref: '#/definitions/MediaAssetSchema'
              *
              *  Data:
              *      type: object
@@ -376,7 +350,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *            description: A play request
              *            required: true
              *            schema:
-             *                $ref: '#/definitions/PlayMedia'
+             *                $ref: '#/definitions/MediaCommand'
              *      security:
              *          - APIKeyHeader: []
              *      responses:
@@ -677,7 +651,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *            description: the media object being transitioned by a client
              *            required: true
              *            schema:
-             *                $ref: '#/definitions/MediaTransitioning'
+             *                $ref: '#/definitions/MediaCommand'
              *      security:
              *          - APIKeyHeader: []
              *      responses:
@@ -707,7 +681,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *            description: the media object finished by a client
              *            required: true
              *            schema:
-             *                $ref: '#/definitions/MediaDone'
+             *                $ref: '#/definitions/MediaCommand'
              *      security:
              *          - APIKeyHeader: []
              *      responses:
