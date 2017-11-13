@@ -1,6 +1,8 @@
 
 // APEP Mongoose schema documentation http://mongoosejs.com/docs/schematypes.html
 
+throw new Error("Does not work as expected, it duplicates nested schemas rather than using $ref");
+
 const m2s = require('mongoose-to-swagger');
 const fs = require('fs');
 const yamljs = require('yamljs');
@@ -20,6 +22,7 @@ const ImageMediaObjectSchema = require('uos-mf-db-schemas/src/media-objects/imag
 const AudioMediaObjectSchema = require('uos-mf-db-schemas/src/media-objects/audio-media-object-schema');
 
 const MediaSceneSwaggerSchema = m2s(MediaSceneSchema, "MediaSceneSchema");
+
 const MaxOnScreenSwaggerSchema = m2s(MaxOnScreenSchema, "MaxOnScreenSchema");
 const MediaAssetSwaggerSchema = m2s(MediaAssetSchema, "MediaAssetSchema");
 const VideoMediaObjectSwaggerSchema = m2s(VideoMediaObjectSchema, "VideoMediaObjectSchema");
@@ -30,6 +33,10 @@ const swaggerModelDefinitions = {
     "definitions": _.merge(MediaSceneSwaggerSchema, MediaAssetSwaggerSchema, MaxOnScreenSwaggerSchema, VideoMediaObjectSwaggerSchema,
         ImageMediaObjectSwaggerSchema, AudioMediaObjectSwaggerSchema)
 };
+
+// const swaggerModelDefinitions = {
+//     "definitions": _.merge(MediaSceneSwaggerSchema)
+// };
 
 fs.writeFile('./db-schema-json-docs/db-schema.json', JSON.stringify(swaggerModelDefinitions), 'utf8', function() {
     console.log("db-schema.json - record file created");
