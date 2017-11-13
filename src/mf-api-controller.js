@@ -571,7 +571,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
                 console.log(`/scene/list - groupId: ${groupId}`);
 
-                self.dataController.listScenes(groupId, function (err, scenes) {
+                self.dataController.listScenes(parseInt(groupId), function (err, scenes) {
                     if (err) {
                         return res.sendStatus(400);
                     } else {
@@ -821,7 +821,12 @@ class MediaframeApiController extends MediaframeworkHubController {
         socket.on("/playback/tag/matcher/set", function (data, callback) {
         });
 
-        socket.on("/scene/list", function (data, callback) {
+        socket.on("/scene/list", function (callback) {
+            console.log(`/scene/list - groupId: ${socket.groupId}`);
+
+            self.dataController.listScenes(parseInt(socket.groupId), function (err, scenes) {
+                callback(err, scenes);
+            });
         });
         socket.on("/scene/find/by/name", function (data, callback) {
         });

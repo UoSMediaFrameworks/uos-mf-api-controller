@@ -11,6 +11,7 @@
  /playback/tag/matcher/set - Filtering playback via Tag matching
 
  (timer and iterator)
+ /scene/find/by/name - receive scene by name
  (done) /scene/list - receive the scene list
  (done) /scene/full - receive the full scene with DB objects (this is not implemented in the API so I'll have to do that)
  (done) /playback/media/show - tell clients to show a piece of media
@@ -24,7 +25,7 @@
  (Renderer listing for)
  http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/ws-docs/
  (done) mediaframework.output.event.playback.media.show - Renderer must display this piece of media
- (done) mediaframework.output.event.playback.media.transition - Rendere must transition this piece of media
+ (done) mediaframework.output.event.playback.media.transition - Renderer must transition this piece of media
  (done) mediaframework.output.event.playback.media.done - Renderer must end this piece of media
  */
 
