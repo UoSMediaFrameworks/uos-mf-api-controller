@@ -209,10 +209,24 @@ class MediaframeApiController extends MediaframeworkHubController {
              *      type: string
              *      description: A valid tag matcher string, bool tag matching allowed
              *
+             *  MediaSceneForListSchema:
+             *      type: object
+             *      required:
+             *          - _id
+             *          - name
+             *          - _groupID
+             *      properties:
+             *          _id:
+             *              type: string
+             *          name:
+             *              type: string
+             *          _groupID:
+             *              type: integer
+             *
              *  SceneList:
              *      type: array
              *      items:
-             *          $ref: '#/definitions/MediaSceneSchema'
+             *          $ref: '#/definitions/MediaSceneForListSchema'
              *
              *  MediaTransitioning:
              *      type: object

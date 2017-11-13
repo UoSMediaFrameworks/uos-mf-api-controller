@@ -2,6 +2,14 @@
 
 /**
  *
+ (commanding a timer and iterator)
+ /playback/scenes/themes/show - Show every scene theme combination
+ /playback/scenes/show - Show scene after scene
+ /playback/scene/show - Show scene
+ /playback/scene/theme/show - Show specific theme from scene
+ /playback/theme/show - Filtering playback via theme
+ /playback/tag/matcher/set - Filtering playback via Tag matching
+
  (timer and iterator)
  (done) /scene/list - receive the scene list
  (done) /scene/full - receive the full scene with DB objects (this is not implemented in the API so I'll have to do that)
@@ -35,6 +43,11 @@ const authOp = {
     }
 };
 
+const swaggerSpecUrl = 'http://localhost:3000/api-docs.json';
+// const swaggerSpecUrl = 'http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json';
+const websocketEndpoint = "http://localhost:3000";
+// const websocketEndpoint = "http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com";
+
 describe("UWP Client Testing", function () {
     before(function (done) {
         testApp.init(done);
@@ -43,7 +56,7 @@ describe("UWP Client Testing", function () {
     describe("JSClient", function () {
 
         function setupTestWithLogin(self, done) {
-            Swagger('http://localhost:3000/api-docs.json')
+            Swagger(swaggerSpecUrl)
                 .then(function (authClient) {
                     authClient.execute(authOp)
                         .then(function (res) {
@@ -62,7 +75,7 @@ describe("UWP Client Testing", function () {
 
             before(function (done) {
                 var self = this;
-                Swagger('http://localhost:3000/api-docs.json')
+                Swagger(swaggerSpecUrl)
                     .then(function (client) {
                         // console.log(client);
                         self.client = client;
@@ -78,7 +91,7 @@ describe("UWP Client Testing", function () {
                     .default
                     .post_auth_token_get({creds: {password: process.env.HUB_PASSWORD}})
                     .then(function (res) {
-                        var authResult = res.body;
+                        var authResult = res.body || res.obj; //Either seem to be fine
                         assert(authResult.token);
                         assert(authResult.roomId);
                         assert(authResult.groupId === '0');
@@ -166,7 +179,7 @@ describe("UWP Client Testing", function () {
         describe("WS Connection", function () {
             before(function (done) {
                 var self = this;
-                Swagger('http://localhost:3000/api-docs.json')
+                Swagger(swaggerSpecUrl)
                     .then(function (authClient) {
                         authClient.execute(authOp)
                             .then(function (res) {
@@ -184,7 +197,8 @@ describe("UWP Client Testing", function () {
             it('WS client can connect and use token to be authenticated as valid ws', function (done) {
                 this.timeout(12000);
                 const validCreds = {token: this.token};
-                const controllerClient = SocketIOClient("http://localhost:3000");
+
+                const controllerClient = SocketIOClient(websocketEndpoint);
 
                 controllerClient.on('connect', function () {
                     controllerClient.emit('auth', validCreds, function (err, token, roomId, groupId) {
@@ -205,7 +219,7 @@ describe("UWP Client Testing", function () {
             it('WS client can register to a room and receive updates', function (done) {
                 const validCreds = {token: this.token};
                 const mediaObject = {_id: "yacn"};
-                const controllerClient = SocketIOClient("http://localhost:3000");
+                const controllerClient = SocketIOClient(websocketEndpoint);
 
                 controllerClient.on('connect', function () {
 
@@ -230,7 +244,7 @@ describe("UWP Client Testing", function () {
         });
 
         function setupTestWithLoginAndWebsocketClientConnection(self, done) {
-            Swagger('http://localhost:3000/api-docs.json')
+            Swagger(swaggerSpecUrl)
                 .then(function (authClient) {
                     authClient.execute(authOp)
                         .then(function (res) {
@@ -245,7 +259,7 @@ describe("UWP Client Testing", function () {
 
                             const validCreds = {token: self.token};
 
-                            self.controllerClient = SocketIOClient("http://localhost:3000");
+                            self.controllerClient = SocketIOClient(websocketEndpoint);
                             self.controllerClient.on('connect', function () {
                                 self.controllerClient.emit('auth', validCreds, function (err, token, roomId, groupId) {
                                     assert(!err);
