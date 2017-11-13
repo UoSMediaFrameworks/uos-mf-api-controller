@@ -283,7 +283,7 @@ describe("UWP Client Testing", function () {
 
                 var self = this;
 
-                const mediaShowOp = {
+                const mediaTransitionOp = {
                     url: '/playback/media/transitioning',
                     pathName: '/playback/media/transitioning',
                     method: "POST",
@@ -299,7 +299,7 @@ describe("UWP Client Testing", function () {
                     }
                 };
 
-                this.client.execute(mediaShowOp)
+                this.client.execute(mediaTransitionOp)
                     .then(function (res) {
                         const ack = res.body;
                         assert(ack);
@@ -319,7 +319,7 @@ describe("UWP Client Testing", function () {
 
                 var self = this;
 
-                const mediaShowOp = {
+                const mediaTransitionOp = {
                     url: '/playback/media/transitioning',
                     pathName: '/playback/media/transitioning',
                     method: "POST",
@@ -335,7 +335,7 @@ describe("UWP Client Testing", function () {
                     }
                 };
 
-                this.client.execute(mediaShowOp);
+                this.client.execute(mediaTransitionOp);
             });
         });
 
@@ -352,7 +352,7 @@ describe("UWP Client Testing", function () {
 
                 var self = this;
 
-                const mediaShowOp = {
+                const mediaDoneOp = {
                     url: '/playback/media/done',
                     pathName: '/playback/media/done',
                     method: "POST",
@@ -368,7 +368,7 @@ describe("UWP Client Testing", function () {
                     }
                 };
 
-                this.client.execute(mediaShowOp)
+                this.client.execute(mediaDoneOp)
                     .then(function (res) {
                         const ack = res.body;
                         assert(ack);
@@ -388,7 +388,7 @@ describe("UWP Client Testing", function () {
 
                 var self = this;
 
-                const mediaShowOp = {
+                const mediaDoneOp = {
                     url: '/playback/media/done',
                     pathName: '/playback/media/done',
                     method: "POST",
@@ -404,7 +404,7 @@ describe("UWP Client Testing", function () {
                     }
                 };
 
-                this.client.execute(mediaShowOp);
+                this.client.execute(mediaDoneOp);
             });
         });
 
