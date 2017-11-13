@@ -655,10 +655,10 @@ class MediaframeApiController extends MediaframeworkHubController {
                         formData: {sceneId: req.get("sceneId"), token: req.get(API_KEY_HEADER)}
                     }, function (err, httpResponse, body) {
                         if (err) {
-                            return res.status(400).json({message: JSON.stringify(err)});
+                            res.status(400).json({message: JSON.stringify(err)});
+                        } else {
+                            res.status(200).json(JSON.parse(body));
                         }
-
-                        res.status(200).json(body);
                     });
             });
 
