@@ -1,10 +1,12 @@
 # https://www.asyncapi.com/tutorial.html - how I created this file
 # https://github.com/asyncapi/asyncapi - Full Docs
 # Documentation builder - https://github.com/asyncapi/docgen
+
+# APEP might be a little out of date, would be nice to specify topics based of subscription or publish to
 asyncapi: '1.0.0'
 info:
   title: Mediaframework - Output - API
-  version: '0.0.2'
+  version: '0.0.3'
   description: Output API documented for subscribers through socket IO websockets.
   license:
     name: MIT
@@ -22,27 +24,21 @@ topics:
   event.playback.media.show:
     publish:
       $ref: '#/components/messages/mediaShow'
-
   event.playback.theme.set:
     publish:
       $ref: '#/components/messages/themeShow'
-
   event.playback.tag.matcher.set:
     publish:
       $ref: '#/components/messages/tagMatcherShow'
-
   event.playback.scene.show:
     publish:
       $ref: '#/components/messages/sceneShow'
-
   event.playback.scene.theme.show:
     publish:
       $ref: '#/components/messages/sceneThemeShow'
-
   event.playback.media.transition:
     publish:
       $ref: '#/components/messages/mediaTransition'
-
   event.playback.media.done:
     publish:
       $ref: '#/components/messages/mediaDone'
@@ -58,16 +54,6 @@ components:
       payload:
         $ref: "#/components/schemas/iotData"
 
-    mediaTransition:
-      summary: Request a client to transition a piece of media
-      payload:
-        $ref: "#/components/schemas/mediaAsset"
-
-    mediaDone:
-      summary: Request a client to end a piece of media
-      payload:
-        $ref: "#/components/schemas/mediaAsset"
-
     auth:
       summary: Required by a client to authenticate with the web sockets
       payload:
@@ -78,6 +64,23 @@ components:
       payload:
         $ref: "#/components/schemas/subscribePayload"
 
+
+    mediaShow:
+      summary: Receive an update to start showing a media object
+      payload:
+        $ref: "#/components/schemas/mediaAsset"
+
+    mediaTransition:
+      summary: Request a client to transition a piece of media
+      payload:
+        $ref: "#/components/schemas/mediaAsset"
+
+    mediaDone:
+      summary: Request a client to end a piece of media
+      payload:
+        $ref: "#/components/schemas/mediaAsset"
+
+
     scenesThemesShow:
       summary: Receive an update to start showing Scene and Theme combinations.
       payload:
@@ -87,11 +90,6 @@ components:
       summary: Receive an update to start showing scenes
       payload:
         $ref: "#/components/schemas/scenesShowPayload"
-
-    mediaShow:
-      summary: Receive an update to start showing a media object
-      payload:
-        $ref: "#/components/schemas/mediaAsset"
 
     themeShow:
       summary: Receive an update to start showing theme

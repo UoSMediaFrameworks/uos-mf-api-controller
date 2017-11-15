@@ -781,7 +781,18 @@ class MediaframeApiController extends MediaframeworkHubController {
         });
         socket.on("/playback/scenes/show", function (data, callback) {
         });
-        socket.on("/playback/media/show", function (data, callback) {
+
+        socket.on("/playback/media/show", function (roomId, mediaObject) {
+            console.log("/playback/media/show ws made - mediaObject: ", mediaObject);
+            self.commandAPIController.sendCommand(roomId, "event.playback.media.show", mediaObject);
+        });
+        socket.on("/playback/media/transition", function (roomId, mediaObject) {
+            console.log("/playback/media/transitioning ws made - mediaObject: ", mediaObject);
+            self.commandAPIController.sendCommand(roomId, "event.playback.media.transition", mediaObject);
+        });
+        socket.on("/playback/media/done", function (roomId, mediaObject) {
+            console.log("/playback/media/done ws made - mediaObject: ", mediaObject);
+            self.commandAPIController.sendCommand(roomId, "event.playback.media.done", mediaObject);
         });
 
         socket.on("/playback/scenes/themes/permutations", function (data, callback) {
@@ -804,13 +815,20 @@ class MediaframeApiController extends MediaframeworkHubController {
         });
         socket.on("/scene/find/by/name", function (data, callback) {
         });
-        socket.on("/scene/full", function (data, callback) {
+        socket.on("/scene/full", function (sceneId, callback) {
+            request
+                .post({
+                    url: process.env.ASSET_STORE,
+                    formData: {sceneId: sceneId, token: socket.token}
+                }, function (err, httpResponse, body) {
+                    if (err) {
+                        callback({message: JSON.stringify(err)});
+                    } else {
+                        callback(null, JSON.parse(body));
+                    }
+                });
         });
 
-        socket.on("/playback/media/transitioning", function (data, callback) {
-        });
-        socket.on("/playback/media/done", function (data, callback) {
-        });
         socket.on("/playback/iot/data", function (data, callback) {
         });
     }

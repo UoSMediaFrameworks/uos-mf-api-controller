@@ -152,7 +152,7 @@ describe("UWP Client Testing", function () {
             });
 
             it('"/scene/full", returns <full scene>', function (done) {
-                this.timeout = 4000;
+                this.timeout(4000);
                 var self = this;
                 const sceneFullOp = {
                     url: '/scene/full',
