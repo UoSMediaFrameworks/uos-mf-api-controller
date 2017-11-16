@@ -19,12 +19,16 @@ Command to run all the tests
 
 ## Create mongoose schema objects to be included as definitions
 
+This is now defunct.  The current tool chain does not understand nested schemas so we have to keep up to date manually.
+
+If we can implement some properties evaulation to replace nested schemas with a $ref link rather than a copy, this is ideal.
+Without this, the client libraries generated have too many duplicate classes
+
 TODO improvements required
 1. Review turning this into a CLI tool
 2. Make this tool more reusable
 3. Complete all schema in and out files for loading in app.js
 4. Review making this a non manual process
-5. Move the schemas to their own library
 
 Using the tool wrapped in a script, we can generate the required definitions as separate files.
 
@@ -54,7 +58,7 @@ Building from deployed environment requires an adjustment of the URL.
 
 ```bash
 java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i <host:port>/api-docs.json -l csharp -o dist/uwp_api_client_<version>
-java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/uwp_api_client_0_0_3rc7
+java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/uwp_api_client_0_0_3rc9
 ```
 
 ## TODO Building a nodejs client
@@ -72,9 +76,11 @@ java -jar swagger-codegen-cli-2.2.3.jar generate -i http://localhost:3000/api-do
 
 The async API documentation can be found [host]:[port]/ws-docs
 
-How to build documentation
+We currently have to manually keep this up to date.  Current version requires some attention to detail.
 
-### Prerequisite  
+#### How to build documentation
+
+##### Prerequisite  
 
 install npm install -g asyncapi-docgen
 
