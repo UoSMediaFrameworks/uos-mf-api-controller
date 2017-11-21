@@ -17,6 +17,10 @@ Command to run all the tests
 
 ```mocha --recursive test```
 
+## Documentation Toolchain
+
+![Toolchain diagram](/docs/APEP_MF_API_and_documentation_tool_chain_processes.jpg)
+
 ## Create mongoose schema objects to be included as definitions
 
 This is now defunct.  The current tool chain does not understand nested schemas so we have to keep up to date manually.
