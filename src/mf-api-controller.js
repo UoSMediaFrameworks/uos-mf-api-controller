@@ -541,9 +541,9 @@ class MediaframeApiController extends MediaframeworkHubController {
              */
             self.router.get('/scene/list', function (req, res) {
 
-                const groupId = res.locals[API_GROUP_ID_KEY];
+                const groupId = res.locals[self.API_GROUP_ID_KEY];
 
-                console.log(`/scene/list - groupId: ${groupId}`);
+                console.log(`/scene/list - groupId: ${groupId} - lookingForGroup: ${self.API_GROUP_ID_KEY}`);
 
                 self.dataController.listScenes(parseInt(groupId), function (err, scenes) {
                     if (err) {
@@ -622,11 +622,11 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              description: Database error
              */
             self.router.get('/scene/full', function (req, res) {
-                console.log({sceneId: req.get("sceneId"), token: req.get(API_KEY_HEADER)});
+                console.log({sceneId: req.get("sceneId"), token: req.get(self.API_KEY_HEADER)});
                 request
                     .post({
                         url: process.env.ASSET_STORE,
-                        formData: {sceneId: req.get("sceneId"), token: req.get(API_KEY_HEADER)}
+                        formData: {sceneId: req.get("sceneId"), token: req.get(self.API_KEY_HEADER)}
                     }, function (err, httpResponse, body) {
                         if (err) {
                             res.status(400).json({message: JSON.stringify(err)});
@@ -724,45 +724,9 @@ class MediaframeApiController extends MediaframeworkHubController {
                 res.json({ack: true});
             });
 
-            const API_KEY_HEADER = "X-API-Key";
-            const API_GROUP_ID_KEY = "X-API-GroupID";
-
-            function requireToken(req, res, next) {
-
-                console.log("requireToken - check");
-
-                if (req.method === "OPTIONS") {
-                    return next();
-                }
-
-                const token = req.get(API_KEY_HEADER);
-
-                if (!token) {
-                    console.log("requireToken - check missing token in request header");
-                    // APEP TODO send error message
-                    return res.status(401).send({message: "check missing token in request header"});
-                }
-
-                // APEP we have a token, we need to check with the media hub if this is cool
-                const creds = {token: token};
-
-                self.mediaHubConnection.attemptClientAuth(creds, function (err, token, roomId, groupId) {
-                    if (err) {
-                        console.log(`requireToken - check error: ${err}`);
-                        return res.status(401).send({message: "error checking with auth provider"});
-                    } else {
-                        console.log(`requireToken - check successful - groupId: ${groupId}`);
-
-                        // APEP using response.locals, we can pass data between this middleware function and the request handler.
-                        res.locals[API_GROUP_ID_KEY] = groupId;
-
-                        next();
-                    }
-                });
-            }
 
             // APEP host the playback API behind require pass key token security
-            self.app.use(requireToken, self.router);
+            self.app.use(self.requireToken.bind(self), self.router);
 
             if (callback)
                 callback();

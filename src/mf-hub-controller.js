@@ -15,6 +15,9 @@ class MediaframeworkHubController extends LegacyHubController {
 
         super(config, optMediaHubConnection);
 
+        this.API_KEY_HEADER = "X-API-Key";
+        this.API_GROUP_ID_KEY = "X-API-GroupID";
+
         this.router = express.Router();
         this.app.use(bodyParser.json());
         this.config = config;
@@ -23,6 +26,41 @@ class MediaframeworkHubController extends LegacyHubController {
 
         this.app.use("/ws-docs", express.static(path.resolve(path.join(__dirname, WS_GENERATED_DOCS_FOLDER))));
         this.app.use("/rest-docs", express.static(swaggerUiAssetPath));
+    }
+
+    requireToken(req, res, next) {
+
+        console.log("requireToken - check");
+
+        if (req.method === "OPTIONS") {
+            return next();
+        }
+
+        const token = req.get(this.API_KEY_HEADER);
+
+        if (!token) {
+            console.log("requireToken - check missing token in request header");
+            return res.status(401).send({message: "check missing token in request header"});
+        }
+
+        // APEP we have a token, we need to check with the media hub if this is cool
+        const creds = {token: token};
+
+        var self = this;
+
+        this.mediaHubConnection.attemptClientAuth(creds, function (err, token, roomId, groupId) {
+            if (err) {
+                console.log(`requireToken - check error: ${err}`);
+                return res.status(401).send({message: "error checking with auth provider"});
+            } else {
+                console.log(`requireToken - check successful - groupId: ${groupId}`);
+
+                // APEP using response.locals, we can pass data between this middleware function and the request handler.
+                res.locals[self.API_GROUP_ID_KEY] = groupId;
+
+                next();
+            }
+        });
     }
 }
 
