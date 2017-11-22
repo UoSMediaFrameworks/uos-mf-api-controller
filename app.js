@@ -15,7 +15,7 @@ const options = {
         "host": process.env.SWAGGER_HOST || "localhost:3000",
         "schemes": ["http"]
     },
-    apis: ['./src/mf-api-controller.js', './db-schema-json-docs/db-schema.yaml'], // Path to the API docs
+    apis: ['./src/mf-api-controller.js', './db-schema-docs/db-schema.yaml'], // Path to the API docs
 };
 const swaggerSpec = swaggerJSDoc(options);
 const appConf = new SwaggerSpecConfiguration(swaggerSpec);
