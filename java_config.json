@@ -1,0 +1,6 @@
+{
+  "groupId":"uk.ac.salford.simt",
+  "artifactId":"uos-mf-api",
+  "artifactVersion":"0.0.3",
+  "dateLibrary" : "java8"
+}

@@ -60,9 +60,6 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          sceneName:
              *              type: string
              *
-             *  Scene:
-             *      type: string
-             *
              *  ThemeId:
              *      type: object
              *      required:
@@ -71,20 +68,17 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          theme:
              *              type: string
              *
-             *  Theme:
-             *      type: string
-             *
              *  PlayScenesAndThemes:
              *      type: object
              *      properties:
              *          scenes:
              *              type: array
              *              items:
-             *                  $ref: '#/definitions/Scene'
+             *                  type: string
              *          themes:
              *              type: array
              *              items:
-             *                  $ref: '#/definitions/Theme'
+             *                  type: string
              *
              *  Play:
              *      type: object
@@ -109,7 +103,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          scenes:
              *              type: array
              *              items:
-             *                  $ref: '#/definitions/Scene'
+             *                  type: string
              *
              *  PlayScene:
              *      type: object
@@ -121,8 +115,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              type: string
              *              description: The playback room
              *          scene:
-             *              type: object
-             *              $ref: '#/definitions/Scene'
+             *              type: string
              *
              *  Password:
              *      type: object
@@ -172,8 +165,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          roomId:
              *              type: string
              *          theme:
-             *              type: object
-             *              $ref: '#/definitions/Theme'
+             *              type: string
              *
              *  SetTagMatcher:
              *      type: string
