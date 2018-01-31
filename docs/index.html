@@ -6,8 +6,7 @@
     <title>Swagger UI</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="./api-spec-resources/swagger-ui.css" >
-    <link rel="icon" type="image/png" href="./api-spec-resources/favicon-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="./api-spec-resources/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="./images/icon_solid_variant_1.png" sizes="500x500" />
     <style>
         html
         {
@@ -25,6 +24,15 @@
         body {
             margin:0;
             background: #fafafa;
+        }
+
+        .mf-header-container {
+            width:100%;
+            background-color: #1e1e1e;
+        }
+
+        .mf-header-container img {
+            max-height:105px;
         }
     </style>
 </head>
@@ -65,6 +73,10 @@
     </defs>
 </svg>
 
+<div class="mf-header-container">
+    <img src="./images/salford-logo.png"/>
+    <img src="./images/MF_transparent.png"/>
+</div>
 <div id="swagger-ui"></div>
 
 <script src="./api-spec-resources/swagger-ui-bundle.js"></script>
@@ -84,7 +96,7 @@
             plugins: [
                 SwaggerUIBundle.plugins.DownloadUrl
             ],
-            layout: "StandaloneLayout"
+            layout: "BaseLayout"
         });
 
         window.ui = ui
