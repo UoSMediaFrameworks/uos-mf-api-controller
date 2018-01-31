@@ -3,10 +3,14 @@
 const LegacyHubController = require("uos-legacy-hub-controller/src/hub-controller");
 const express = require('express');
 const bodyParser = require('body-parser');
-const swaggerUiAssetPath = require("swagger-ui-dist").getAbsoluteFSPath();
+
+const swaggerUi = require("swagger-ui-dist"),
+    swaggerUiAssetPath = swaggerUi.getAbsoluteFSPath();
+
 const path = require("path");
 const morgan = require('morgan');
 const WS_GENERATED_DOCS_FOLDER = "../async-websocket-api-docs";
+const DOCS_FOLDER = "../docs";
 
 class MediaframeworkHubController extends LegacyHubController {
 
@@ -25,7 +29,8 @@ class MediaframeworkHubController extends LegacyHubController {
         this.app.use(morgan('combined'));
 
         this.app.use("/ws-docs", express.static(path.resolve(path.join(__dirname, WS_GENERATED_DOCS_FOLDER))));
-        this.app.use("/rest-docs", express.static(swaggerUiAssetPath));
+        this.app.use("/rest-docs", express.static(path.resolve(path.join(__dirname, DOCS_FOLDER))));
+        this.app.use("/rest-docs/api-spec-resources", express.static(swaggerUiAssetPath));
     }
 
     requireToken(req, res, next) {
