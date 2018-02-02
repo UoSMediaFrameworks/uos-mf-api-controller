@@ -292,6 +292,33 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             /**
              * @swagger
+             * /playback/scenes/themes/permutations:
+             *  get:
+             *      description: Get a list of every unique permutations of SceneTheme from a bucket of Scenes and Themes
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: play
+             *            description: A play request
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/Play'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: List of SceneTheme Combinations
+             *              schema:
+             *                  $ref: '#/definitions/SceneThemes'
+             */
+            self.router.get('/playback/scenes/themes/permutations', function (req, res) {
+            });
+
+            /**
+             * @swagger
              * /playback/scenes/show:
              *  post:
              *      description: Show scenes
@@ -325,63 +352,6 @@ class MediaframeApiController extends MediaframeworkHubController {
                 }, function () {
                     res.json({ack: true});
                 });
-            });
-
-            /**
-             * @swagger
-             * /playback/media/show:
-             *  post:
-             *      description: Playback media
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: play
-             *            description: A play request
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/MediaCommand'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             */
-            self.router.post('/playback/media/show', function (req, res) {
-                console.log("/playback/media/show request made - body: ", req.body);
-                self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.show", req.body.media);
-                res.json({ack: true});
-            });
-
-            /**
-             * @swagger
-             * /playback/scenes/themes/permutations:
-             *  get:
-             *      description: Get a list of every unique permutations of SceneTheme from a bucket of Scenes and Themes
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: play
-             *            description: A play request
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/Play'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: List of SceneTheme Combinations
-             *              schema:
-             *                  $ref: '#/definitions/SceneThemes'
-             */
-            self.router.get('/playback/scenes/themes/permutations', function (req, res) {
             });
 
             /**
@@ -626,6 +596,36 @@ class MediaframeApiController extends MediaframeworkHubController {
                             res.status(200).json(JSON.parse(body));
                         }
                     });
+            });
+
+            /**
+             * @swagger
+             * /playback/media/show:
+             *  post:
+             *      description: Playback media
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: play
+             *            description: A play request
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/MediaCommand'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             */
+            self.router.post('/playback/media/show', function (req, res) {
+                console.log("/playback/media/show request made - body: ", req.body);
+                self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.show", req.body.media);
+                res.json({ack: true});
             });
 
             /**
