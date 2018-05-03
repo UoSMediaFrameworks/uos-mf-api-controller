@@ -58,6 +58,15 @@ java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i http://lo
 
 Building from deployed environment requires an adjustment of the URL.
 
+## Building a C# client
+
+Targets v4.6 and other non 5.x C# projects.
+
+```bash
+java -jar swagger-codegen-cli-2.2.3.jar generate -i <host:port>/api-docs.json -l csharp -o dist/csharp_api_client_<version>
+java -jar swagger-codegen-cli-2.2.3.jar generate -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/csharp_api_client_0_0_3rc1
+```
+
 ### Building from deployed environment
 
 ```bash
