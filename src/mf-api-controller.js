@@ -125,6 +125,25 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          password:
              *              type: string
              *
+             *  Username:
+             *      type: object
+             *      required:
+             *          - username
+             *      properties:
+             *          username:
+             *              type: string
+             *
+             *  AuthCreds:
+             *      type: object
+             *      require:
+             *          - username,
+             *          - password
+             *      properties:
+             *          username:
+             *              type: string
+             *          password:
+             *              type: string
+             *
              *  SessionResult:
              *      type: object
              *      properties:
@@ -224,10 +243,10 @@ class MediaframeApiController extends MediaframeworkHubController {
              *      parameters:
              *          - in: body
              *            name: creds
-             *            description: A password key
+             *            description: a username and password key
              *            required: true
              *            schema:
-             *                $ref: '#/definitions/Password'
+             *                $ref: '#/definitions/AuthCreds'
              *      responses:
              *          200:
              *              description: Valid session token given
@@ -239,9 +258,10 @@ class MediaframeApiController extends MediaframeworkHubController {
              *                  $ref: '#/definitions/ErrorMessage'
              */
             self.app.post('/auth/token/get', function (req, res) {
-                const creds = {password: req.body.password};
+                const creds = {password: req.body.password,username:req.body.username};
 
                 self.mediaHubConnection.attemptClientAuth(creds, function (err, token, roomId, groupId) {
+
                     if (err) {
                         res.status(400).send({message: err});
                     } else {
@@ -290,32 +310,6 @@ class MediaframeApiController extends MediaframeworkHubController {
                 });
             });
 
-            /**
-             * @swagger
-             * /playback/scenes/themes/permutations:
-             *  get:
-             *      description: Get a list of every unique permutations of SceneTheme from a bucket of Scenes and Themes
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: play
-             *            description: A play request
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/Play'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: List of SceneTheme Combinations
-             *              schema:
-             *                  $ref: '#/definitions/SceneThemes'
-             */
-            self.router.get('/playback/scenes/themes/permutations', function (req, res) {
-            });
 
             /**
              * @swagger
@@ -384,7 +378,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                 console.log(req.body);
 
                 self.commandAPIController.playSceneAndThemes(req.body.roomId, {
-                    scenes: [req.body.play],
+                    scenes: [req.body.scenes],
                     themes: []
                 }, function () {
                     res.json({ack: true});
@@ -417,12 +411,12 @@ class MediaframeApiController extends MediaframeworkHubController {
              */
             self.router.post('/playback/scene/theme/show', function (req, res) {
 
-                console.log("/playback/scene/show");
+                console.log("/playback/scene/theme/show'");
                 console.log(req.body);
 
                 self.commandAPIController.playSceneAndThemes(req.body.roomId, {
-                    scenes: [req.body.play.scene],
-                    themes: [req.body.play.theme]
+                    scenes: [req.body.sceneTheme.scene],
+                    themes: [req.body.sceneTheme.theme]
                 }, function () {
                     res.json({ack: true});
                 });
@@ -453,6 +447,15 @@ class MediaframeApiController extends MediaframeworkHubController {
              *                  $ref: '#/definitions/ApiAck'
              */
             self.router.post('/playback/theme/show', function (req, res) {
+                console.log("/playback/theme/show");
+                console.log(req.body);
+
+                self.commandAPIController.playSceneAndThemes(req.body.roomId, {
+                    scenes: [],
+                    themes: [req.body.theme]
+                }, function () {
+                    res.json({ack: true});
+                });
             });
 
             /**
@@ -479,7 +482,14 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
+            //TODO: AP implement in hub
             self.router.post('/playback/tag/matcher/set', function (req, res) {
+                console.log(req.body)
+                self.commandAPIController.sendCommand(req.body.roomId,"setTagMatcher", {
+                        matcher:req.body.matcher
+                }, function (res) {
+                    res.json({ack: true});
+                });
             });
 
             /**
@@ -587,7 +597,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                 console.log({sceneId: req.get("sceneId"), token: req.get(self.API_KEY_HEADER)});
                 request
                     .post({
-                        url: process.env.ASSET_STORE,
+                        url: process.env.ASSET_STORE + "/api/scene/full",
                         formData: {sceneId: req.get("sceneId"), token: req.get(self.API_KEY_HEADER)}
                     }, function (err, httpResponse, body) {
                         if (err) {
@@ -724,7 +734,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                 callback();
         });
     }
-
+    //TODO: We have talked about removing this.
     clientSocketSuccessfulAuth(socket) {
         var self = this;
 
