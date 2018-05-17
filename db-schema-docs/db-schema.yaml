@@ -123,11 +123,11 @@ definitions:
         forceFullSequencePlayback:
           type: boolean
           required: false
-        theme:
+        themes:
           type: array
           required: false
           items:
-            $ref: "#/definitions/MediaAssetSchema"
+            $ref: "#/definitions/ThemeSchema"
         style:
           type: mixed
           required: false
