@@ -173,6 +173,7 @@ describe("UWP Client Testing", function () {
                         const scene = res.body;
                         assert(scene);
                         assert(scene.name === self.sceneList[0].name);
+                        assert(Array.isArray(scene.themes));
                         done();
                     });
             });
@@ -219,6 +220,9 @@ describe("UWP Client Testing", function () {
                         const fullScene = res.body;
                         assert(fullScene);
                         assert(fullScene._id === self.sceneList[0]._id);
+
+                        // APEP we have to use themes as an array for best client library support
+                        assert(Array.isArray(fullScene.themes));
                         done();
                     });
             });

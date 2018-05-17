@@ -7,6 +7,7 @@ const CommandAPIController = require("./controllers/command-api-controller");
 const SubscribeController = require("uos-legacy-hub-controller/src/modules/controllers/subscribe-controller");
 
 const request = require("request");
+const _ = require("lodash");
 
 class MediaframeApiController extends MediaframeworkHubController {
 
@@ -261,7 +262,6 @@ class MediaframeApiController extends MediaframeworkHubController {
                 const creds = {password: req.body.password,username:req.body.username};
 
                 self.mediaHubConnection.attemptClientAuth(creds, function (err, token, roomId, groupId) {
-
                     if (err) {
                         res.status(400).send({message: err});
                     } else {
@@ -558,14 +558,32 @@ class MediaframeApiController extends MediaframeworkHubController {
 
                 console.log(`scene/find/by/name  - sceneName: ${sceneName}`);
 
-                self.dataController.loadSceneByName(sceneName, function (err, scene) {
+                self.dataController.loadSceneByName(sceneName, function (err, sceneJson) {
                     if (err) {
                         return res.status(400);
                     } else {
-                        return res.status(200).send(scene);
+
+                        sceneJson.themes = convertDatabaseThemeToSchemaFriendly(sceneJson);
+
+                        return res.status(200).send(sceneJson);
                     }
                 });
             });
+
+            function convertDatabaseThemeToSchemaFriendly(sceneJson) {
+                if (! sceneJson.hasOwnProperty("themes")) {
+                    return [];
+                }
+
+                return _.map(Object.keys(sceneJson.themes), function (themeName) {
+                    let themeValue = sceneJson.themes[themeName];
+
+                    return {
+                        name: themeName,
+                        value: themeValue
+                    }
+                });
+            }
 
             /**
              * @swagger
@@ -603,7 +621,12 @@ class MediaframeApiController extends MediaframeworkHubController {
                         if (err) {
                             res.status(400).json({message: JSON.stringify(err)});
                         } else {
-                            res.status(200).json(JSON.parse(body));
+                            let sceneJson = JSON.parse(body);
+
+                            sceneJson.themes = convertDatabaseThemeToSchemaFriendly(sceneJson);
+
+                            // APEP we need to convert the themes from JS notation to something that works in a schema
+                            res.status(200).json(sceneJson);
                         }
                     });
             });

@@ -124,8 +124,10 @@ definitions:
           type: boolean
           required: false
         theme:
-          type: mixed
+          type: array
           required: false
+          items:
+            $ref: "#/definitions/MediaAssetSchema"
         style:
           type: mixed
           required: false
@@ -136,6 +138,16 @@ definitions:
         _id:
           type: string
           required: false
+
+  ThemeSchema:
+      properties:
+        name:
+          type: string
+          required: true
+        value:
+          type: string
+          required: true
+
   MediaAssetSchema:
       properties:
         type:
