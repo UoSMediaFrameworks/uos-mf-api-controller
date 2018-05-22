@@ -3,6 +3,7 @@
 const sinon = require('sinon');
 const assert = require('assert');
 const Swagger = require('swagger-client');
+const _ = require('lodash');
 
 const CommandAPIController = require("../../src/controllers/command-api-controller");
 
@@ -101,10 +102,11 @@ describe('RestTests', function () {
                     assert.equal(firstArgument, expectedRoomId, "the room id param was missed");
 
                     let secondArgument = stub.getCall(0).args[1];
-                    assert.equal(secondArgument, data.sceneId, "the scene id param was not correct as specified from the data")
+                    let expectedCommandName = "sceneAudioScale"
+                    assert.equal(secondArgument, expectedCommandName, "the command name was incorrect");
 
                     let thirdArgument  = stub.getCall(0).args[2];
-                    assert.equal(thirdArgument, data.rescaleFactor, `the rescale param ${thirdArgument} was not correct as specified from the data ${data.rescaleFactor}`)
+                    assert(_.isEqual(thirdArgument, data), `the rescale param ${thirdArgument} was not correct as specified from the data ${data}`)
 
                     done();
                 })

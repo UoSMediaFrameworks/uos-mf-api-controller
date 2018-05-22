@@ -313,7 +313,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                 let sceneId = req.body.sceneId;
                 let rescaleFactor = req.body.rescaleFactor;
 
-                self.commandAPIController.sendCommand(roomId, sceneId, rescaleFactor);
+                self.commandAPIController.sendCommand(roomId, "sceneAudioScale", req.body);
 
                 res.json({ack: true});
             });
