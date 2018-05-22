@@ -26,7 +26,11 @@ Command to run all the tests
 This is now defunct.  The current tool chain does not understand nested schemas so we have to keep up to date manually.
 
 If we can implement some properties evaulation to replace nested schemas with a $ref link rather than a copy, this is ideal.
-Without this, the client libraries generated have too many duplicate classes
+Without this, the client libraries generated have too many duplicate classes.
+
+Therefore the db-schema-docs/db-schema.yaml must be manually kept up to date, if any of the schemas representing data returned from Mongo is changed.
+Also we can make specify deltas from db schema to a format that suits the Swagger/OpenAPI spec.
+For example - the themes are converted from DB format to a DTO to suit strongly typed language. 
 
 TODO improvements required
 1. Review turning this into a CLI tool
@@ -64,7 +68,8 @@ Targets v4.6 and other non 5.x C# projects.
 
 ```bash
 java -jar swagger-codegen-cli-2.2.3.jar generate -i <host:port>/api-docs.json -l csharp -o dist/csharp_api_client_<version>
-java -jar swagger-codegen-cli-2.2.3.jar generate -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/csharp_api_client_0_0_3rc1
+java -jar swagger-codegen-cli-2.2.3.jar generate -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/csharp_api_client_0_0_4rc3
+java -jar swagger-codegen-cli-2.2.3.jar generate -i http://prod-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/csharp_api_client_0_0_4rc4
 ```
 
 ### Building from deployed environment
@@ -84,7 +89,7 @@ See test/client-integration-tests
 
 ```bash
 java -jar swagger-codegen-cli-2.2.3.jar generate -c uwp_config.json -i <host:port>/api-docs.json -l java -o dist/uwp_api_client_<version>
-java -jar swagger-codegen-cli-2.2.3.jar generate -c java_config.json -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l java -o dist/java_api_client_0_0_3rc13
+java -jar swagger-codegen-cli-2.2.3.jar generate -c java_config.json -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l java -o dist/java_api_client_0_0_3rc14
 ```
 
 ## Async API

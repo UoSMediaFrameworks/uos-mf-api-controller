@@ -93,6 +93,17 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              type: object
              *              $ref: '#/definitions/PlayScenesAndThemes'
              *
+             *  SceneAudioRescale:
+             *      type: object
+             *      required:
+             *          - sceneId
+             *          - rescaleFactor
+             *      properties:
+             *          sceneId:
+             *              type: string
+             *          rescaleFactor:
+             *              type: number
+             *
              *  PlayScenes:
              *      type: object
              *      required:
@@ -268,6 +279,43 @@ class MediaframeApiController extends MediaframeworkHubController {
                         res.json({token: token, roomId: roomId, groupId: groupId});
                     }
                 });
+            });
+
+            /**
+             * @swagger
+             * /playback/scene/audio/scale:
+             *  post:
+             *      description: Rescale all audio within a scene at runtime
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: rescaleAudioForScene
+             *            description: Details required for rescaling, the scene id and rescale factor between 0 and 1
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/SceneAudioRescale'
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             *          400:
+             *              description : An error
+             */
+            self.router.post('/playback/scene/audio/scale', function (req, res) {
+                console.log("/playback/scene/audio/scale");
+                console.log(req.body);
+
+                let roomId = "";
+                let sceneId = req.body.sceneId;
+                let rescaleFactor = req.body.rescaleFactor;
+
+                self.commandAPIController.sendCommand(roomId, sceneId, rescaleFactor);
+
+                res.json({ack: true});
             });
 
             /**
@@ -570,6 +618,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                 });
             });
 
+            // APEP helper for any scene based DB call that returns a MediaSceneSchema in the API
             function convertDatabaseThemeToSchemaFriendly(sceneJson) {
                 if (! sceneJson.hasOwnProperty("themes")) {
                     return [];
