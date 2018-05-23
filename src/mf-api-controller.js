@@ -297,6 +297,8 @@ class MediaframeApiController extends MediaframeworkHubController {
              *            required: true
              *            schema:
              *                $ref: '#/definitions/SceneAudioRescale'
+             *      security:
+             *          - APIKeyHeader: []
              *      responses:
              *          200:
              *              description: Acknowledgement
