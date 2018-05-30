@@ -104,6 +104,17 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          rescaleFactor:
              *              type: number
              *
+             *  SceneVisualLayerChange:
+             *      type: object
+             *      required:
+             *          - sceneId
+             *          - rescaleFactor
+             *      properties:
+             *          sceneId:
+             *              type: string
+             *          visualLayer:
+             *              type: number
+             *
              *  PlayScenes:
              *      type: object
              *      required:
@@ -241,6 +252,96 @@ class MediaframeApiController extends MediaframeworkHubController {
              *      properties:
              *          message:
              *              type: string
+             *
+             *  ApplyNamedSceneConfig:
+             *      type: object
+             *      properties:
+             *          namedSceneConfig:
+             *              type: string
+             *              description: Apply a named pre-authored scene config for a scene in the playback system.
+             *              required: true
+             *          sceneId:
+             *              type: string
+             *              description: The scene id to apply the named configuration to
+             *
+             *  ApplySceneConfig:
+             *      type: object
+             *      properties:
+             *          name:
+             *              type: string
+             *          overrides:
+             *              type: object
+             *              properties:
+             *                  timings:
+             *                      type: object
+             *                      description: Update or override
+             *                      properties:
+             *                          displayDuration:
+             *                              type: number
+             *                              required: false
+             *                          displayInterval:
+             *                              type: number
+             *                              required: false
+             *                          transitionDuration:
+             *                              type: number
+             *                              required: false
+             *                          sceneDuration:
+             *                              type: number
+             *                  constraints:
+             *                      type: object
+             *                      properties:
+             *                          maximumOnScreen:
+             *                              type: object
+             *                              properties:
+             *                                  image:
+             *                                      type: number
+             *                                  video:
+             *                                      type: number
+             *                                  text:
+             *                                      type: number
+             *                                  audio:
+             *                                      type: number
+             *                  semantics:
+             *                      type: object
+             *                      properties:
+             *                          themes:
+             *                              type: array
+             *                              items:
+             *                                  $ref: "#/definitions/ThemeSchema"
+             *          config:
+             *              type: object
+             *              properties:
+             *                  backgroundPriority:
+             *                      type: object
+             *                      properties:
+             *                          visualLayer:
+             *                              type: number
+             *                  audioMix:
+             *                      type: object
+             *                      properties:
+             *                          groups:
+             *                              type: array
+             *                              description: Allow a config to author detailed audio mix by using theme like tag statements OR a theme name to specify which audio assets to apply the rescale to
+             *                              items:
+             *                                  type: object
+             *                                  properties:
+             *                                      tagMatch:
+             *                                          type: string
+             *                                          required: false
+             *                                          description: theme like tag statement
+             *                                      theme:
+             *                                          type: string
+             *                                          required: false
+             *                                          description: the theme to use to apply the audio delta to
+             *                                      rescaleFactor:
+             *                                          type: number
+             *                                          description: scale the audio by the factor provided, must be between 0 and 1
+             *                  tagFilter:
+             *                      type: object
+             *                  themeFilter:
+             *                      type: object
+             *                  transitionOptions:
+             *                      type: object
              */
 
             /**
@@ -312,10 +413,121 @@ class MediaframeApiController extends MediaframeworkHubController {
                 console.log(req.body);
 
                 let roomId = "";
-                let sceneId = req.body.sceneId;
-                let rescaleFactor = req.body.rescaleFactor;
 
                 self.commandAPIController.sendCommand(roomId, "sceneAudioScale", req.body);
+
+                res.json({ack: true});
+            });
+
+
+            /**
+             * @swagger
+             * /playback/scene/visual-layer/update:
+             *  post:
+             *      description: Updates the visual layer for all render able media within a scene at runtime
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: visualLayerChangeForScene
+             *            description: Details required for changing the visual layer, the scene id and (int) layer.  0 is the lowest layer and it is suggested a min value of 1.
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/SceneVisualLayerChange'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             *          400:
+             *              description : An error
+             */
+            self.router.post('/playback/scene/visual-layer/update', function (req, res) {
+                console.log("/playback/scene/visual-layer/update");
+                console.log(req.body);
+
+                let roomId = "";
+
+                self.commandAPIController.sendCommand(roomId, "sceneVisualLayerChange", req.body);
+
+                res.json({ack: true});
+            });
+
+
+            /**
+             * @swagger
+             * /playback/scene/config/apply/byname:
+             *  post:
+             *      description: Applies a pre authored named config for a scene
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: applyNamedSceneConfig
+             *            description: Scene id and config name required
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/ApplyNamedSceneConfig'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             *          400:
+             *              description : An error
+             */
+            self.router.post('/playback/scene/config/apply/byname', function (req, res) {
+                console.log("/playback/scene/config/apply/byname");
+                console.log(req.body);
+
+                let roomId = "";
+
+                self.commandAPIController.sendCommand(roomId, "applyNamedSceneConfig", req.body);
+
+                res.json({ack: true});
+            });
+
+            /**
+             * @swagger
+             * /playback/scene/config/apply:
+             *  post:
+             *      description: Applies a new named config for a scene (runtime only)
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      parameters:
+             *          - in: body
+             *            name: applySceneConfig
+             *            description: A valid scene config
+             *            required: true
+             *            schema:
+             *                $ref: '#/definitions/ApplySceneConfig'
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             *          400:
+             *              description : An error
+             */
+            self.router.post('/playback/scene/config/apply', function (req, res) {
+                console.log("/playback/scene/config/apply");
+                console.log(req.body);
+
+                let roomId = "";
+
+                self.commandAPIController.sendCommand(roomId, "applySceneConfig", req.body);
 
                 res.json({ack: true});
             });
