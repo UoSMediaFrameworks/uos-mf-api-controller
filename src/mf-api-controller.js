@@ -452,9 +452,9 @@ class MediaframeApiController extends MediaframeworkHubController {
 
                 let roomId = "";
 
-                self.commandAPIController.sendCommand(roomId, "sceneVisualLayerChange", req.body);
+                // self.commandAPIController.sendCommand(roomId, "sceneVisualLayerChange", req.body);
 
-                res.json({ack: true});
+                res.json({ack: true, message: "not implemented"});
             });
 
 

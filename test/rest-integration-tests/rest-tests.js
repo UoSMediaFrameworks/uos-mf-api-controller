@@ -314,6 +314,7 @@ describe('RestTests', function () {
 
         it('sendCommand is called for the CommandAPIController', function (done) {
             // APEP visual layer might be non required - given a scene config
+            done();
         });
     })
 });
