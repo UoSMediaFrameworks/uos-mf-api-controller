@@ -263,14 +263,21 @@ class MediaframeApiController extends MediaframeworkHubController {
              *          sceneId:
              *              type: string
              *              description: The scene id to apply the named configuration to
+             *              required: true
              *
              *  ApplySceneConfig:
              *      type: object
              *      properties:
+             *          sceneId:
+             *              type: string
+             *              description: the scene id to apply the new config for
+             *              required: true
              *          name:
              *              type: string
+             *              required: true
              *          overrides:
              *              type: object
+             *              required: false
              *              properties:
              *                  timings:
              *                      type: object
@@ -310,6 +317,8 @@ class MediaframeApiController extends MediaframeworkHubController {
              *                                  $ref: "#/definitions/ThemeSchema"
              *          config:
              *              type: object
+             *              description: A loose format of further available scene changes
+             *              required: false
              *              properties:
              *                  backgroundPriority:
              *                      type: object
