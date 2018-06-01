@@ -316,5 +316,62 @@ describe('RestTests', function () {
             // APEP visual layer might be non required - given a scene config
             done();
         });
-    })
+    });
+
+    describe('/playback/scenes/themes/reset', function () {
+        before(function(done) {
+            setupTestWithLogin(this, done);
+            // APEP above methods adds this.token, this.roomId, this.client
+        });
+
+        beforeEach(function() {
+            this.sinon = sandbox = sinon.sandbox.create();
+        });
+
+        afterEach(function() {
+            sandbox.restore();
+        });
+
+        function postResetScenesThemes(token) {
+            return {
+                url: '/playback/scenes/themes/reset',
+                pathName: '/playback/scenes/themes/reset',
+                method: "POST",
+                requestInterceptor: function (req) {
+                    req.headers["x-api-key"] = token;
+                    return req;
+                }
+            };
+        }
+
+        it('it passes an empty play command to the hub', function (done) {
+            let stub = sandbox.stub(testApp.commandAPIController, "playSceneAndThemes"); // roomId, commandName, commandValue
+
+            let token = this.token;
+
+            this.client.execute(postResetScenesThemes(token))
+                .then(function (res) {
+                    // Make sure the SendActions have been called to change the state to PLAYING
+                    sinon.assert.calledOnce(testApp.commandAPIController.playSceneAndThemes);
+
+                    // APEP make sure it was called with correct number of args
+                    assert.equal(stub.getCall(0).args.length, 2);
+
+                    let firstArgument  = stub.getCall(0).args[0];
+
+                    // APEP TODO this likely to change
+                    assert.equal(firstArgument, "", `the room id should be empty for now`);
+
+                    let expectedPlayCommand = {
+                        scenes: [],
+                        themes: [],
+                    };
+
+                    let thirdArgument  = stub.getCall(0).args[1];
+                    assert(_.isEqual(thirdArgument, expectedPlayCommand), ` ${thirdArgument} was not correct as specified  ${expectedPlayCommand}`)
+
+                    done();
+                })
+        })
+    });
 });

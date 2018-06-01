@@ -545,7 +545,7 @@ class MediaframeApiController extends MediaframeworkHubController {
              * @swagger
              * /playback/scenes/themes/show:
              *  post:
-             *      description: Playback scene and theme combinations from the provided scenes and themes
+             *      description: Playback scene and theme combinations from the provided scenes and themes.  This API call is designed to be used as a single shot of every scene-theme you want to playback.
              *      consumes:
              *          - application/json
              *      produces:
@@ -579,6 +579,44 @@ class MediaframeApiController extends MediaframeworkHubController {
                         res.json({ack: true});
                     }
                 });
+            });
+
+            /**
+             * @swagger
+             * /playback/scenes/themes/reset:
+             *  post:
+             *      description: Reset the playback engine
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Acknowledgement
+             *              schema:
+             *                  $ref: '#/definitions/ApiAck'
+             *          400:
+             *              description : An error
+             */
+            self.router.post('/playback/scenes/themes/reset', function (req, res) {
+
+                console.log("/playback/scenes/themes/show");
+
+                // APEP 010618 for now the reset can just reset by providing an empty bucket.
+                // this is likely to change in the future.
+
+                let roomid = ""
+
+                let play = {
+                    scenes: [],
+                    themes: []
+                }
+
+                self.commandAPIController.playSceneAndThemes(roomid, play);
+
+                res.json({ack: true});
             });
 
 
