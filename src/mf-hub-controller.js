@@ -12,6 +12,8 @@ const morgan = require('morgan');
 const WS_GENERATED_DOCS_FOLDER = "../async-websocket-api-docs";
 const DOCS_FOLDER = "../docs";
 
+const oors = require('cors');
+
 class MediaframeworkHubController extends LegacyHubController {
 
     constructor(config, optMediaHubConnection) {
@@ -24,6 +26,10 @@ class MediaframeworkHubController extends LegacyHubController {
 
         this.router = express.Router();
         this.app.use(bodyParser.json());
+
+        // APEP we must allow CORS - ideally a whitelist but required as we have multiple web domains for MF tools
+        // This is now required after initial web browser integration
+        this.app.use(oors());
         this.config = config;
 
         this.app.use(morgan('combined'));

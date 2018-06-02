@@ -18,7 +18,18 @@ const options = {
     apis: ['./src/mf-api-controller.js', './db-schema-docs/db-schema.yaml'], // Path to the API docs
 };
 const swaggerSpec = swaggerJSDoc(options);
-const appConf = new SwaggerSpecConfiguration(swaggerSpec);
+
+class SwaggerAndAWSConf extends SwaggerSpecConfiguration {
+    constructor(swaggerSpec) {
+        super();
+        this.swaggerSpec = swaggerSpec;
+        this.htmlControllerEnvironmentId = process.env.HTML_RANDOM_CONTROLLER_ENV_ID;
+        this.htmlControllerEnvironmentName = process.env.HTML_RANDOM_CONTROLLER_ENV_NAME;
+    }
+}
+
+const appConf = new SwaggerAndAWSConf(swaggerSpec);
+
 
 const apiController = new MediaframeApiController(appConf);
 

@@ -1,6 +1,6 @@
 {
   "name": "uos-mf-api",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": true,
   "main": "app.js",
   "scripts": {
@@ -23,7 +23,9 @@
     "yamljs": "^0.3.0"
   },
   "dependencies": {
+    "aws-sdk": "^2.250.1",
     "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
     "express": "^4.16.2",
     "lodash": "^4.17.4",
     "mongoose": "^4.12.4",

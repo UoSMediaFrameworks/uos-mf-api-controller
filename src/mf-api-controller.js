@@ -9,10 +9,17 @@ const SubscribeController = require("uos-legacy-hub-controller/src/modules/contr
 const request = require("request");
 const _ = require("lodash");
 
+const AWS = require('aws-sdk');
+
 class MediaframeApiController extends MediaframeworkHubController {
 
     constructor(config) {
         super(config);
+
+        this.HTML_RANDOM_CONTROLLER_RESET_PARAMS = {
+            EnvironmentId: config.htmlControllerEnvironmentId,
+            EnvironmentName: config.htmlControllerEnvironmentName
+        };
     }
 
     init(callback) {
@@ -791,13 +798,52 @@ class MediaframeApiController extends MediaframeworkHubController {
              *              schema:
              *                  $ref: '#/definitions/ApiAck'
              */
-            //TODO: AP implement in hub
             self.router.post('/playback/tag/matcher/set', function (req, res) {
+                //TODO: AP implement in hub
                 console.log(req.body)
                 self.commandAPIController.sendCommand(req.body.roomId,"setTagMatcher", {
                         matcher:req.body.matcher
                 }, function (res) {
                     res.json({ack: true});
+                });
+            });
+
+            /**
+             * @swagger
+             * /playback/controller/html/random/reset:
+             *  post:
+             *      description: Restart the html random controller for dynamic data updates
+             *      consumes:
+             *          - application/json
+             *      produces:
+             *          - application/json
+             *      security:
+             *          - APIKeyHeader: []
+             *      responses:
+             *          200:
+             *              description: Result from AWS
+             *              type: object
+             *              properties:
+             *                  ResponseMetadata:
+             *                      type: object
+             *                      properties:
+             *                          RequestId:
+             *                              type: string
+             *          400:
+             *              description: Error from AWS
+             *              type: object
+             */
+            self.router.post('/playback/controller/html/random/reset', function (req, res) {
+                let elasticbeanstalk = new AWS.ElasticBeanstalk({region: "eu-west-1"});
+
+                elasticbeanstalk.restartAppServer(self.HTML_RANDOM_CONTROLLER_RESET_PARAMS, function(err, data) {
+                    if (err) {
+                        console.log(err, err.stack); // an error occurred
+                        return res.status(400).json(err);
+                    } else {
+                        console.log(data);           // successful response
+                        return res.status(200).json(data);
+                    }
                 });
             });
 
