@@ -13,9 +13,7 @@ definitions:
       text:
         type: number
         required: false
-      _id:
-        type: string
-        required: false
+
   VideoMediaObjectSchema:
     properties:
       path:
@@ -96,14 +94,18 @@ definitions:
         required: false
   MediaSceneSchema:
       properties:
+        _id:
+          type: string
+          required: true
         name:
           type: string
-          required: false
+          required: true
         version:
           type: string
           required: false
         maximumOnScreen:
           type: object
+          required: false
           $ref: "#/definitions/MaxOnScreenSchema"
         displayDuration:
           type: number
@@ -135,9 +137,6 @@ definitions:
           type: array
           items:
             $ref: "#/definitions/MediaAssetSchema"
-        _id:
-          type: string
-          required: false
 
   ThemeSchema:
       properties:

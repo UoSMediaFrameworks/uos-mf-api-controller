@@ -10,13 +10,18 @@ const options = {
     swaggerDefinition: {
         info: {
             title: 'uos-mf-api-controller', // Title (required)
-            version: '0.0.5', // Version (required)
+            version: '0.0.6', // Version (required)
         },
         "host": process.env.SWAGGER_HOST || "localhost:3000",
         "schemes": ["http"]
     },
-    apis: ['./src/mf-api-controller.js', './db-schema-docs/db-schema.yaml'], // Path to the API docs
+    apis: [
+        './schemas/api-dto-schema-docs/api-dtos.yaml',
+        './src/mf-api-controller.js',
+        './schemas/db-schema-docs/db-schema.yaml'
+    ]
 };
+
 const swaggerSpec = swaggerJSDoc(options);
 
 class SwaggerAndAWSConf extends SwaggerSpecConfiguration {
