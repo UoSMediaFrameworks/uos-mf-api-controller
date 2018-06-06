@@ -8,8 +8,9 @@ const SubscribeController = require("uos-legacy-hub-controller/src/modules/contr
 
 const request = require("request");
 const _ = require("lodash");
-
+const express = require('express');
 const AWS = require('aws-sdk');
+
 
 class MediaframeApiController extends MediaframeworkHubController {
 
@@ -20,6 +21,727 @@ class MediaframeApiController extends MediaframeworkHubController {
             EnvironmentId: config.htmlControllerEnvironmentId,
             EnvironmentName: config.htmlControllerEnvironmentName
         };
+    }
+
+    playbackRoutes() {
+
+        let self = this;
+        let router = express.Router();
+
+        /**
+         * @swagger
+         * /playback/scene/audio/scale:
+         *  post:
+         *      description: Rescale all audio within a scene at runtime
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: rescaleAudioForScene
+         *            description: Details required for rescaling, the scene id and rescale factor between 0 and 1
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/SceneAudioRescale'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         */
+        router.post('/scene/audio/scale', function (req, res) {
+            console.log("/playback/scene/audio/scale");
+            console.log(req.body);
+
+            let roomId = "";
+
+            self.commandAPIController.sendCommand(roomId, "sceneAudioScale", req.body);
+
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/scene/visual-layer/update:
+         *  post:
+         *      description: Updates the visual layer for all render able media within a scene at runtime
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: visualLayerChangeForScene
+         *            description: Details required for changing the visual layer, the scene id and (int) layer.  0 is the lowest layer and it is suggested a min value of 1.
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/SceneVisualLayerChange'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         */
+        router.post('/scene/visual-layer/update', function (req, res) {
+            console.log("/playback/scene/visual-layer/update");
+            console.log(req.body);
+
+            let roomId = "";
+
+            // self.commandAPIController.sendCommand(roomId, "sceneVisualLayerChange", req.body);
+
+            res.json({ack: true, message: "not implemented"});
+        });
+
+        /**
+         * @swagger
+         * /playback/scene/config/apply/byname:
+         *  post:
+         *      description: Applies a pre authored named config for a scene
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: applyNamedSceneConfig
+         *            description: Scene id and config name required
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/ApplyNamedSceneConfig'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         */
+        router.post('/scene/config/apply/byname', function (req, res) {
+            console.log("/playback/scene/config/apply/byname");
+            console.log(req.body);
+
+            let roomId = "";
+
+            self.commandAPIController.sendCommand(roomId, "applyNamedSceneConfig", req.body);
+
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/scene/config/apply:
+         *  post:
+         *      description: Applies a new named config for a scene (runtime only)
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: applySceneConfig
+         *            description: A valid scene config
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/ApplySceneConfig'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         */
+        router.post('/scene/config/apply', function (req, res) {
+            console.log("/playback/scene/config/apply");
+            console.log(req.body);
+
+            let roomId = "";
+
+            self.commandAPIController.sendCommand(roomId, "applySceneConfig", req.body);
+
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/scenes/themes/show:
+         *  post:
+         *      description: Playback scene and theme combinations from the provided scenes and themes.  This API call is designed to be used as a single shot of every scene-theme you want to playback.
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: play
+         *            description: A play request
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/Play'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         */
+        router.post('/scenes/themes/show', function (req, res) {
+
+            console.log("/playback/scenes/themes/show");
+            console.log(req.body);
+
+            self.commandAPIController.playSceneAndThemes(req.body.roomId, req.body.play, function (err) {
+                if (err) {
+                    res.status(400).send(err);
+                } else {
+                    res.json({ack: true});
+                }
+            });
+        });
+
+        /**
+         * @swagger
+         * /playback/scenes/themes/reset:
+         *  post:
+         *      description: Reset the playback engine
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         */
+        router.post('/scenes/themes/reset', function (req, res) {
+
+            console.log("/playback/scenes/themes/show");
+
+            // APEP 010618 for now the reset can just reset by providing an empty bucket.
+            // this is likely to change in the future.
+
+            let roomid = ""
+
+            let play = {
+                scenes: [],
+                themes: []
+            }
+
+            self.commandAPIController.playSceneAndThemes(roomid, play);
+
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/scenes/show:
+         *  post:
+         *      description: Show scenes
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: play
+         *            description: A play request
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/PlayScenes'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         */
+        router.post('/scenes/show', function (req, res) {
+
+            console.log("/playback/scenes/show");
+            console.log(req.body);
+
+            self.commandAPIController.playSceneAndThemes(req.body.roomId, {
+                scenes: req.body.scenes,
+                themes: []
+            }, function () {
+                res.json({ack: true});
+            });
+        });
+
+        /**
+         * @swagger
+         * /playback/scene/show:
+         *  post:
+         *      description: Show scene
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: play
+         *            description: A play request
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/PlayScene'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         */
+        router.post('/scene/show', function (req, res) {
+
+            console.log("/playback/scene/show");
+            console.log(req.body);
+
+            self.commandAPIController.playSceneAndThemes(req.body.roomId, {
+                scenes: [req.body.scenes],
+                themes: []
+            }, function () {
+                res.json({ack: true});
+            });
+        });
+
+        /**
+         * @swagger
+         * /playback/scene/theme/show:
+         *  post:
+         *      description: Show scene theme
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: play
+         *            description: A play request
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/PlaySceneTheme'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         */
+        router.post('/scene/theme/show', function (req, res) {
+
+            console.log("/playback/scene/theme/show'");
+            console.log(req.body);
+
+            self.commandAPIController.playSceneAndThemes(req.body.roomId, {
+                scenes: [req.body.sceneTheme.scene],
+                themes: [req.body.sceneTheme.theme]
+            }, function () {
+                res.json({ack: true});
+            });
+        });
+
+        /**
+         * @swagger
+         * /playback/theme/show:
+         *  post:
+         *      description: Show theme
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: play
+         *            description: A play request
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/PlayTheme'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         */
+        router.post('/theme/show', function (req, res) {
+            console.log("/playback/theme/show");
+            console.log(req.body);
+
+            self.commandAPIController.playSceneAndThemes(req.body.roomId, {
+                scenes: [],
+                themes: [req.body.theme]
+            }, function () {
+                res.json({ack: true});
+            });
+        });
+
+        /**
+         * @swagger
+         * /playback/tag/matcher/set:
+         *  post:
+         *      description: Set a tag matcher
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: matcher
+         *            description: A tag matcher update request
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/SetTagMatcher'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         */
+        router.post('/tag/matcher/set', function (req, res) {
+            //TODO: AP implement in hub
+            console.log(req.body)
+            self.commandAPIController.sendCommand(req.body.roomId,"setTagMatcher", {
+                matcher:req.body.matcher
+            }, function (res) {
+                res.json({ack: true});
+            });
+        });
+
+        /**
+         * @swagger
+         * /playback/controller/html/random/reset:
+         *  post:
+         *      description: Restart the html random controller for dynamic data updates
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Result from AWS
+         *              type: object
+         *              properties:
+         *                  ResponseMetadata:
+         *                      type: object
+         *                      properties:
+         *                          RequestId:
+         *                              type: string
+         *          400:
+         *              description: Error from AWS
+         *              type: object
+         */
+        router.post('/controller/html/random/reset', function (req, res) {
+            let elasticbeanstalk = new AWS.ElasticBeanstalk({region: "eu-west-1"});
+
+            elasticbeanstalk.restartAppServer(self.HTML_RANDOM_CONTROLLER_RESET_PARAMS, function(err, data) {
+                if (err) {
+                    console.log(err, err.stack); // an error occurred
+                    return res.status(400).json(err);
+                } else {
+                    console.log(data);           // successful response
+                    return res.status(200).json(data);
+                }
+            });
+        });
+
+        /**
+         * @swagger
+         * /playback/media/show:
+         *  post:
+         *      description: Playback media
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: play
+         *            description: A play request
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/MediaCommand'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         */
+        router.post('/media/show', function (req, res) {
+            console.log("/playback/media/show request made - body: ", req.body);
+            self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.show", req.body.media);
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/media/transitioning:
+         *  post:
+         *      description: When a client begins transitioning a piece of media
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: transitioning
+         *            description: the media object being transitioned by a client
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/MediaCommand'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         */
+        router.post('/media/transitioning', function (req, res) {
+            console.log("/playback/media/transitioning request made - body: ", req.body);
+            self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.transition", req.body.media);
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/media/done:
+         *  post:
+         *      description: When a client begins transitioning a piece of media
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: finished
+         *            description: the media object finished by a client
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/MediaCommand'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         */
+        router.post('/media/done', function (req, res) {
+            console.log("/playback/media/done request made - body: ", req.body);
+            self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.done", req.body.media);
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/iot/data:
+         *  post:
+         *      description: When a client begins transitioning a piece of media
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: data
+         *            description: a schemaless data object from an IoT device
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/Data'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         */
+        router.post('/iot/data', function (req, res) {
+            res.json({ack: true});
+        });
+
+        return router;
+    }
+
+    sceneRoutes() {
+
+        let self = this;
+
+        let router = express.Router();
+
+        // APEP helper for any scene based DB call that returns a MediaSceneSchema in the API
+        function convertDatabaseThemeToSchemaFriendly(sceneJson) {
+            if (! sceneJson.hasOwnProperty("themes")) {
+                return [];
+            }
+
+            return _.map(Object.keys(sceneJson.themes), function (themeName) {
+                let themeValue = sceneJson.themes[themeName];
+
+                return {
+                    name: themeName,
+                    value: themeValue
+                }
+            });
+        }
+
+        /**
+         * @swagger
+         * /scene/list:
+         *  get:
+         *      description: Get a list of media scenes (_id, names and _groupID)
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: List of media scenes
+         *              schema:
+         *                  $ref: '#/definitions/SceneList'
+         *          400:
+         *              description: Database error
+         */
+        router.get('/list', function (req, res) {
+
+            const groupId = res.locals[self.API_GROUP_ID_KEY];
+
+            console.log(`/scene/list - groupId: ${groupId} - lookingForGroup: ${self.API_GROUP_ID_KEY}`);
+
+            self.dataController.listScenes(parseInt(groupId), function (err, scenes) {
+                if (err) {
+                    return res.sendStatus(400);
+                } else {
+                    return res.status(200).send(scenes);
+                }
+            });
+        });
+
+        /**
+         * @swagger
+         * /scene/find/by/name:
+         *  get:
+         *      description: Get a media scene.
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: header
+         *            name: sceneName
+         *            description: A scene name
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/SceneName'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: A media scene
+         *              schema:
+         *                  $ref: '#/definitions/MediaSceneSchema'
+         *          400:
+         *              description: Database error
+         */
+        router.get('/find/by/name', function (req, res) {
+
+            const sceneName = req.get("sceneName");
+
+            console.log(`scene/find/by/name  - sceneName: ${sceneName}`);
+
+            self.dataController.loadSceneByName(sceneName, function (err, sceneJson) {
+                if (err) {
+                    return res.status(400);
+                } else {
+
+                    sceneJson.themes = convertDatabaseThemeToSchemaFriendly(sceneJson);
+
+                    return res.status(200).send(sceneJson);
+                }
+            });
+        });
+
+        /**
+         * @swagger
+         * /scene/full:
+         *  get:
+         *      description: Get a media scene with any uploaded media object full database details appended.
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: header
+         *            name: sceneId
+         *            description: A scene id
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/SceneId'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: A media scene with any uploaded media objects appended in full
+         *              schema:
+         *                  $ref: '#/definitions/MediaSceneSchema'
+         *          400:
+         *              description: Database error
+         */
+        router.get('/full', function (req, res) {
+            console.log({sceneId: req.get("sceneId"), token: req.get(self.API_KEY_HEADER)});
+            request
+                .post({
+                    url: process.env.ASSET_STORE + "/api/scene/full",
+                    formData: {sceneId: req.get("sceneId"), token: req.get(self.API_KEY_HEADER)}
+                }, function (err, httpResponse, body) {
+                    if (err) {
+                        res.status(400).json({message: JSON.stringify(err)});
+                    } else {
+                        let sceneJson = JSON.parse(body);
+
+                        sceneJson.themes = convertDatabaseThemeToSchemaFriendly(sceneJson);
+
+                        // APEP we need to convert the themes from JS notation to something that works in a schema
+                        res.status(200).json(sceneJson);
+                    }
+                });
+        });
+
+        return router;
     }
 
     init(callback) {
@@ -74,713 +796,8 @@ class MediaframeApiController extends MediaframeworkHubController {
                 });
             });
 
-            /**
-             * @swagger
-             * /playback/scene/audio/scale:
-             *  post:
-             *      description: Rescale all audio within a scene at runtime
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: rescaleAudioForScene
-             *            description: Details required for rescaling, the scene id and rescale factor between 0 and 1
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/SceneAudioRescale'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             *          400:
-             *              description : An error
-             */
-            self.router.post('/playback/scene/audio/scale', function (req, res) {
-                console.log("/playback/scene/audio/scale");
-                console.log(req.body);
-
-                let roomId = "";
-
-                self.commandAPIController.sendCommand(roomId, "sceneAudioScale", req.body);
-
-                res.json({ack: true});
-            });
-
-
-            /**
-             * @swagger
-             * /playback/scene/visual-layer/update:
-             *  post:
-             *      description: Updates the visual layer for all render able media within a scene at runtime
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: visualLayerChangeForScene
-             *            description: Details required for changing the visual layer, the scene id and (int) layer.  0 is the lowest layer and it is suggested a min value of 1.
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/SceneVisualLayerChange'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             *          400:
-             *              description : An error
-             */
-            self.router.post('/playback/scene/visual-layer/update', function (req, res) {
-                console.log("/playback/scene/visual-layer/update");
-                console.log(req.body);
-
-                let roomId = "";
-
-                // self.commandAPIController.sendCommand(roomId, "sceneVisualLayerChange", req.body);
-
-                res.json({ack: true, message: "not implemented"});
-            });
-
-
-            /**
-             * @swagger
-             * /playback/scene/config/apply/byname:
-             *  post:
-             *      description: Applies a pre authored named config for a scene
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: applyNamedSceneConfig
-             *            description: Scene id and config name required
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/ApplyNamedSceneConfig'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             *          400:
-             *              description : An error
-             */
-            self.router.post('/playback/scene/config/apply/byname', function (req, res) {
-                console.log("/playback/scene/config/apply/byname");
-                console.log(req.body);
-
-                let roomId = "";
-
-                self.commandAPIController.sendCommand(roomId, "applyNamedSceneConfig", req.body);
-
-                res.json({ack: true});
-            });
-
-            /**
-             * @swagger
-             * /playback/scene/config/apply:
-             *  post:
-             *      description: Applies a new named config for a scene (runtime only)
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: applySceneConfig
-             *            description: A valid scene config
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/ApplySceneConfig'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             *          400:
-             *              description : An error
-             */
-            self.router.post('/playback/scene/config/apply', function (req, res) {
-                console.log("/playback/scene/config/apply");
-                console.log(req.body);
-
-                let roomId = "";
-
-                self.commandAPIController.sendCommand(roomId, "applySceneConfig", req.body);
-
-                res.json({ack: true});
-            });
-
-            /**
-             * @swagger
-             * /playback/scenes/themes/show:
-             *  post:
-             *      description: Playback scene and theme combinations from the provided scenes and themes.  This API call is designed to be used as a single shot of every scene-theme you want to playback.
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: play
-             *            description: A play request
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/Play'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             *          400:
-             *              description : An error
-             */
-            self.router.post('/playback/scenes/themes/show', function (req, res) {
-
-                console.log("/playback/scenes/themes/show");
-                console.log(req.body);
-
-                self.commandAPIController.playSceneAndThemes(req.body.roomId, req.body.play, function (err) {
-                    if (err) {
-                        res.status(400).send(err);
-                    } else {
-                        res.json({ack: true});
-                    }
-                });
-            });
-
-            /**
-             * @swagger
-             * /playback/scenes/themes/reset:
-             *  post:
-             *      description: Reset the playback engine
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             *          400:
-             *              description : An error
-             */
-            self.router.post('/playback/scenes/themes/reset', function (req, res) {
-
-                console.log("/playback/scenes/themes/show");
-
-                // APEP 010618 for now the reset can just reset by providing an empty bucket.
-                // this is likely to change in the future.
-
-                let roomid = ""
-
-                let play = {
-                    scenes: [],
-                    themes: []
-                }
-
-                self.commandAPIController.playSceneAndThemes(roomid, play);
-
-                res.json({ack: true});
-            });
-
-
-            /**
-             * @swagger
-             * /playback/scenes/show:
-             *  post:
-             *      description: Show scenes
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: play
-             *            description: A play request
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/PlayScenes'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             */
-            self.router.post('/playback/scenes/show', function (req, res) {
-
-                console.log("/playback/scenes/show");
-                console.log(req.body);
-
-                self.commandAPIController.playSceneAndThemes(req.body.roomId, {
-                    scenes: req.body.scenes,
-                    themes: []
-                }, function () {
-                    res.json({ack: true});
-                });
-            });
-
-            /**
-             * @swagger
-             * /playback/scene/show:
-             *  post:
-             *      description: Show scene
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: play
-             *            description: A play request
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/PlayScene'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             */
-            self.router.post('/playback/scene/show', function (req, res) {
-
-                console.log("/playback/scene/show");
-                console.log(req.body);
-
-                self.commandAPIController.playSceneAndThemes(req.body.roomId, {
-                    scenes: [req.body.scenes],
-                    themes: []
-                }, function () {
-                    res.json({ack: true});
-                });
-            });
-
-            /**
-             * @swagger
-             * /playback/scene/theme/show:
-             *  post:
-             *      description: Show scene theme
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: play
-             *            description: A play request
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/PlaySceneTheme'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             */
-            self.router.post('/playback/scene/theme/show', function (req, res) {
-
-                console.log("/playback/scene/theme/show'");
-                console.log(req.body);
-
-                self.commandAPIController.playSceneAndThemes(req.body.roomId, {
-                    scenes: [req.body.sceneTheme.scene],
-                    themes: [req.body.sceneTheme.theme]
-                }, function () {
-                    res.json({ack: true});
-                });
-            });
-
-            /**
-             * @swagger
-             * /playback/theme/show:
-             *  post:
-             *      description: Show theme
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: play
-             *            description: A play request
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/PlayTheme'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             */
-            self.router.post('/playback/theme/show', function (req, res) {
-                console.log("/playback/theme/show");
-                console.log(req.body);
-
-                self.commandAPIController.playSceneAndThemes(req.body.roomId, {
-                    scenes: [],
-                    themes: [req.body.theme]
-                }, function () {
-                    res.json({ack: true});
-                });
-            });
-
-            /**
-             * @swagger
-             * /playback/tag/matcher/set:
-             *  post:
-             *      description: Set a tag matcher
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: matcher
-             *            description: A tag matcher update request
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/SetTagMatcher'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             */
-            self.router.post('/playback/tag/matcher/set', function (req, res) {
-                //TODO: AP implement in hub
-                console.log(req.body)
-                self.commandAPIController.sendCommand(req.body.roomId,"setTagMatcher", {
-                        matcher:req.body.matcher
-                }, function (res) {
-                    res.json({ack: true});
-                });
-            });
-
-            /**
-             * @swagger
-             * /playback/controller/html/random/reset:
-             *  post:
-             *      description: Restart the html random controller for dynamic data updates
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Result from AWS
-             *              type: object
-             *              properties:
-             *                  ResponseMetadata:
-             *                      type: object
-             *                      properties:
-             *                          RequestId:
-             *                              type: string
-             *          400:
-             *              description: Error from AWS
-             *              type: object
-             */
-            self.router.post('/playback/controller/html/random/reset', function (req, res) {
-                let elasticbeanstalk = new AWS.ElasticBeanstalk({region: "eu-west-1"});
-
-                elasticbeanstalk.restartAppServer(self.HTML_RANDOM_CONTROLLER_RESET_PARAMS, function(err, data) {
-                    if (err) {
-                        console.log(err, err.stack); // an error occurred
-                        return res.status(400).json(err);
-                    } else {
-                        console.log(data);           // successful response
-                        return res.status(200).json(data);
-                    }
-                });
-            });
-
-            /**
-             * @swagger
-             * /scene/list:
-             *  get:
-             *      description: Get a list of media scenes (_id, names and _groupID)
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: List of media scenes
-             *              schema:
-             *                  $ref: '#/definitions/SceneList'
-             *          400:
-             *              description: Database error
-             */
-            self.router.get('/scene/list', function (req, res) {
-
-                const groupId = res.locals[self.API_GROUP_ID_KEY];
-
-                console.log(`/scene/list - groupId: ${groupId} - lookingForGroup: ${self.API_GROUP_ID_KEY}`);
-
-                self.dataController.listScenes(parseInt(groupId), function (err, scenes) {
-                    if (err) {
-                        return res.sendStatus(400);
-                    } else {
-                        return res.status(200).send(scenes);
-                    }
-                });
-            });
-
-            /**
-             * @swagger
-             * /scene/find/by/name:
-             *  get:
-             *      description: Get a media scene.
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: header
-             *            name: sceneName
-             *            description: A scene name
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/SceneName'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: A media scene
-             *              schema:
-             *                  $ref: '#/definitions/MediaSceneSchema'
-             *          400:
-             *              description: Database error
-             */
-            self.router.get('/scene/find/by/name', function (req, res) {
-
-                const sceneName = req.get("sceneName");
-
-                console.log(`scene/find/by/name  - sceneName: ${sceneName}`);
-
-                self.dataController.loadSceneByName(sceneName, function (err, sceneJson) {
-                    if (err) {
-                        return res.status(400);
-                    } else {
-
-                        sceneJson.themes = convertDatabaseThemeToSchemaFriendly(sceneJson);
-
-                        return res.status(200).send(sceneJson);
-                    }
-                });
-            });
-
-            // APEP helper for any scene based DB call that returns a MediaSceneSchema in the API
-            function convertDatabaseThemeToSchemaFriendly(sceneJson) {
-                if (! sceneJson.hasOwnProperty("themes")) {
-                    return [];
-                }
-
-                return _.map(Object.keys(sceneJson.themes), function (themeName) {
-                    let themeValue = sceneJson.themes[themeName];
-
-                    return {
-                        name: themeName,
-                        value: themeValue
-                    }
-                });
-            }
-
-            /**
-             * @swagger
-             * /scene/full:
-             *  get:
-             *      description: Get a media scene with any uploaded media object full database details appended.
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: header
-             *            name: sceneId
-             *            description: A scene id
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/SceneId'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: A media scene with any uploaded media objects appended in full
-             *              schema:
-             *                  $ref: '#/definitions/MediaSceneSchema'
-             *          400:
-             *              description: Database error
-             */
-            self.router.get('/scene/full', function (req, res) {
-                console.log({sceneId: req.get("sceneId"), token: req.get(self.API_KEY_HEADER)});
-                request
-                    .post({
-                        url: process.env.ASSET_STORE + "/api/scene/full",
-                        formData: {sceneId: req.get("sceneId"), token: req.get(self.API_KEY_HEADER)}
-                    }, function (err, httpResponse, body) {
-                        if (err) {
-                            res.status(400).json({message: JSON.stringify(err)});
-                        } else {
-                            let sceneJson = JSON.parse(body);
-
-                            sceneJson.themes = convertDatabaseThemeToSchemaFriendly(sceneJson);
-
-                            // APEP we need to convert the themes from JS notation to something that works in a schema
-                            res.status(200).json(sceneJson);
-                        }
-                    });
-            });
-
-            /**
-             * @swagger
-             * /playback/media/show:
-             *  post:
-             *      description: Playback media
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: play
-             *            description: A play request
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/MediaCommand'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             */
-            self.router.post('/playback/media/show', function (req, res) {
-                console.log("/playback/media/show request made - body: ", req.body);
-                self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.show", req.body.media);
-                res.json({ack: true});
-            });
-
-            /**
-             * @swagger
-             * /playback/media/transitioning:
-             *  post:
-             *      description: When a client begins transitioning a piece of media
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: transitioning
-             *            description: the media object being transitioned by a client
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/MediaCommand'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             */
-            self.router.post('/playback/media/transitioning', function (req, res) {
-                console.log("/playback/media/transitioning request made - body: ", req.body);
-                self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.transition", req.body.media);
-                res.json({ack: true});
-            });
-
-            /**
-             * @swagger
-             * /playback/media/done:
-             *  post:
-             *      description: When a client begins transitioning a piece of media
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: finished
-             *            description: the media object finished by a client
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/MediaCommand'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             */
-            self.router.post('/playback/media/done', function (req, res) {
-                console.log("/playback/media/done request made - body: ", req.body);
-                self.commandAPIController.sendCommand(req.body.roomId, "event.playback.media.done", req.body.media);
-                res.json({ack: true});
-            });
-
-            /**
-             * @swagger
-             * /playback/iot/data:
-             *  post:
-             *      description: When a client begins transitioning a piece of media
-             *      consumes:
-             *          - application/json
-             *      produces:
-             *          - application/json
-             *      parameters:
-             *          - in: body
-             *            name: data
-             *            description: a schemaless data object from an IoT device
-             *            required: true
-             *            schema:
-             *                $ref: '#/definitions/Data'
-             *      security:
-             *          - APIKeyHeader: []
-             *      responses:
-             *          200:
-             *              description: Acknowledgement
-             *              schema:
-             *                  $ref: '#/definitions/ApiAck'
-             */
-            self.router.post('/playback/iot/data', function (req, res) {
-                res.json({ack: true});
-            });
-
+            self.app.use('/playback', self.playbackRoutes().bind(self));
+            self.app.use('/scene', self.sceneRoutes().bind(self));
 
             // APEP host the playback API behind require pass key token security
             self.app.use(self.requireToken.bind(self), self.router);

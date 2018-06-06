@@ -26,8 +26,7 @@ const swaggerSpec = swaggerJSDoc(options);
 
 class SwaggerAndAWSConf extends SwaggerSpecConfiguration {
     constructor(swaggerSpec) {
-        super();
-        this.swaggerSpec = swaggerSpec;
+        super(swaggerSpec);
         this.htmlControllerEnvironmentId = process.env.HTML_RANDOM_CONTROLLER_ENV_ID;
         this.htmlControllerEnvironmentName = process.env.HTML_RANDOM_CONTROLLER_ENV_NAME;
     }
