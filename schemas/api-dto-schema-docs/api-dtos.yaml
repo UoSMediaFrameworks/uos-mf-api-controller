@@ -264,12 +264,12 @@ definitions:
              description: A loose format of further available scene changes
              required: false
              properties:
-                 backgroundPriority:
+                 visualLayerPriority:
                      type: object
                      properties:
                          visualLayer:
                              type: number
-                 audioMix:
+                 audioMixScale:
                      type: object
                      properties:
                          groups:
