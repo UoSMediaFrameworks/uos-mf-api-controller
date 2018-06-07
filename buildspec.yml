@@ -6,5 +6,4 @@ phases:
       - npm install
 artifacts:
   files:
-    - *
-    - **/*
+    - '**/*'
