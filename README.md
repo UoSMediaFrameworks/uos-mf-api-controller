@@ -69,7 +69,11 @@ Targets v4.6 and other non 5.x C# projects.
 ```bash
 java -jar swagger-codegen-cli-2.2.3.jar generate -i <host:port>/api-docs.json -l csharp -o dist/csharp_api_client_<version>
 java -jar swagger-codegen-cli-2.2.3.jar generate -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/csharp_api_client_0_0_4rc3
-java -jar swagger-codegen-cli-2.2.3.jar generate -i http://prod-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/csharp_api_client_0_0_4rc4
+
+java -jar swagger-codegen-cli-2.2.3.jar generate -i http://localhost:3001/api-docs.json -l csharp -o dist/dev_csharp_api_client_0_0_6rc1
+java -jar swagger-codegen-cli-2.2.3.jar generate -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/dev_csharp_api_client_0_0_6rc1
+java -jar swagger-codegen-cli-2.2.3.jar generate -i http://staging-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/staging_csharp_api_client_0_0_6rc1
+java -jar swagger-codegen-cli-2.2.3.jar generate -i http://prod-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/prod_csharp_api_client_0_0_6rc1
 ```
 
 ### Building from deployed environment

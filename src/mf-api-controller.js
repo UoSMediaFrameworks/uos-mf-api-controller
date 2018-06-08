@@ -797,6 +797,7 @@ class MediaframeApiController extends MediaframeworkHubController {
             });
 
             self.app.use('/playback', self.playbackRoutes().bind(self));
+
             self.app.use('/scene', self.sceneRoutes().bind(self));
 
             // APEP host the playback API behind require pass key token security

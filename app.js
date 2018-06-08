@@ -3,6 +3,7 @@
 const MediaframeApiController = require('./src/mf-api-controller');
 const SwaggerSpecConfiguration = require("./src/swagger-spec-configuration");
 const swaggerJSDoc = require('swagger-jsdoc');
+const yamljs = require('yamljs');
 
 // APEP sample documentation
 // https://github.com/Surnet/swagger-jsdoc/blob/master/example/app.js
@@ -16,13 +17,14 @@ const options = {
         "schemes": ["http"]
     },
     apis: [
-        './schemas/api-dto-schema-docs/api-dtos.yaml',
-        './src/mf-api-controller.js',
-        './schemas/db-schema-docs/db-schema.yaml'
+        './src/mf-api-controller.js'
     ]
 };
 
+
 const swaggerSpec = swaggerJSDoc(options);
+
+swaggerSpec.definitions = yamljs.load('./schemas/merged-schemas.yaml');
 
 class SwaggerAndAWSConf extends SwaggerSpecConfiguration {
     constructor(swaggerSpec) {
