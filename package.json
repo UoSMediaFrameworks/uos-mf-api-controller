@@ -35,7 +35,6 @@
     "swagger-jsdoc": "^1.9.7",
     "swagger-ui-dist": "^3.3.2",
     "uos-legacy-hub-controller": "uosmediaframeworks/uos-legacy-hub-controller",
-    "uos-mf-db-schemas": "uosmediaframeworks/uos-mf-db-schemas#0.0.2rc1",
-    "yamljs": "^0.3.0"
+    "uos-mf-db-schemas": "uosmediaframeworks/uos-mf-db-schemas#0.0.2rc1"
   }
 }

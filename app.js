@@ -3,7 +3,6 @@
 const MediaframeApiController = require('./src/mf-api-controller');
 const SwaggerSpecConfiguration = require("./src/swagger-spec-configuration");
 const swaggerJSDoc = require('swagger-jsdoc');
-const yamljs = require('yamljs');
 
 // APEP sample documentation
 // https://github.com/Surnet/swagger-jsdoc/blob/master/example/app.js
