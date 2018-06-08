@@ -17,14 +17,15 @@ const options = {
         "schemes": ["http"]
     },
     apis: [
-        './src/mf-api-controller.js'
+        './schemas/security-schema.yaml',
+        './schemas/db-schema-docs/db-schema.yaml',
+        './schemas/api-dto-schema-docs/api-dtos.yaml',
+        './src/mf-api-controller.js',
     ]
 };
 
 
 const swaggerSpec = swaggerJSDoc(options);
-
-swaggerSpec.definitions = yamljs.load('./schemas/merged-schemas.yaml');
 
 class SwaggerAndAWSConf extends SwaggerSpecConfiguration {
     constructor(swaggerSpec) {
@@ -39,6 +40,6 @@ const appConf = new SwaggerAndAWSConf(swaggerSpec);
 
 const apiController = new MediaframeApiController(appConf);
 
-apiController.init(function() {
+apiController.init(function () {
 
 });
