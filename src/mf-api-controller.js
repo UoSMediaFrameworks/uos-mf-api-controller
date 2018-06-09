@@ -28,6 +28,8 @@ class MediaframeApiController extends MediaframeworkHubController {
         let self = this;
         let router = express.Router();
 
+        self.app.use(self.requireToken.bind(self), router);
+
         /**
          * @swagger
          * /playback/scene/audio/scale:
@@ -601,6 +603,8 @@ class MediaframeApiController extends MediaframeworkHubController {
 
         let router = express.Router();
 
+        self.app.use(self.requireToken.bind(self), router);
+
         // APEP helper for any scene based DB call that returns a MediaSceneSchema in the API
         function convertDatabaseThemeToSchemaFriendly(sceneJson) {
             if (! sceneJson.hasOwnProperty("themes")) {
@@ -796,9 +800,12 @@ class MediaframeApiController extends MediaframeworkHubController {
                 });
             });
 
-            self.app.use('/playback', self.playbackRoutes().bind(self));
 
-            self.app.use('/scene', self.sceneRoutes().bind(self));
+            let playbackRouter = self.playbackRoutes().bind(self);
+            self.app.use('/playback', playbackRouter);
+
+            let sceneRouter = self.sceneRoutes().bind(self);
+            self.app.use('/scene', sceneRouter);
 
             // APEP host the playback API behind require pass key token security
             self.app.use(self.requireToken.bind(self), self.router);
