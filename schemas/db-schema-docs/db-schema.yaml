@@ -100,6 +100,11 @@ definitions:
         name:
           type: string
           required: true
+        config:
+          type: array
+          required: false
+          items:
+            $ref: "#/definitions/ApplySceneConfig"
         version:
           type: string
           required: false

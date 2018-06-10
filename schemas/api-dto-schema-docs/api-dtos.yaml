@@ -239,7 +239,7 @@ definitions:
               themes:
                   type: array
                   items:
-                      $ref: "#/definitions/SceneConfigOverrides"
+                      $ref: "#/definitions/ThemeSchema"
  SceneConfig:
   type: object
   description: A loose format of further available scene changes
