@@ -56,7 +56,7 @@ class MediaframeApiController extends MediaframeworkHubController {
          *                  $ref: '#/definitions/ApiAck'
          *          400:
          *              description : An error
-     *              429:
+         *          429:
          *              description : Rate limited end point rejecting post - resend value after cool down
          */
         router.post('/scene/audio/scale', function (req, res) {
