@@ -36,6 +36,8 @@ class SwaggerAndAWSConf extends SwaggerSpecConfiguration {
 
 const appConf = new SwaggerAndAWSConf(swaggerSpec);
 
+// APEP debugging environment variables
+// console.log(JSON.stringify(appConf));
 
 const apiController = new MediaframeApiController(appConf);
 

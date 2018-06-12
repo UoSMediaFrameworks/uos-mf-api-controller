@@ -9,6 +9,7 @@ const SubscribeController = require("uos-legacy-hub-controller/src/modules/contr
 const request = require("request");
 const _ = require("lodash");
 const express = require('express');
+const RateLimit = require('express-rate-limit');
 const AWS = require('aws-sdk');
 
 
@@ -55,6 +56,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          *                  $ref: '#/definitions/ApiAck'
          *          400:
          *              description : An error
+     *              429:
+         *              description : Rate limited end point rejecting post - resend value after cool down
          */
         router.post('/scene/audio/scale', function (req, res) {
             console.log("/playback/scene/audio/scale");
@@ -761,6 +764,15 @@ class MediaframeApiController extends MediaframeworkHubController {
             self.app.get('/api-docs.json', function (req, res) {
                 res.json(self.config.swaggerSpec);
             });
+
+            const apiLimiter = new RateLimit({
+                windowMs: 1000, // 1 second
+                max: 5,
+                delayMs: 0 // disabled
+            });
+
+            // rate limit the audio call
+            self.app.use('/playback/scene/audio/', apiLimiter);
 
             /**
              * @swagger

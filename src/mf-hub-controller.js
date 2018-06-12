@@ -32,6 +32,9 @@ class MediaframeworkHubController extends LegacyHubController {
         this.app.use(oors());
         this.config = config;
 
+        // elb and nginx support
+        this.app.enable('trust proxy');
+
         this.app.use(morgan('combined'));
 
         this.app.use("/ws-docs", express.static(path.resolve(path.join(__dirname, WS_GENERATED_DOCS_FOLDER))));

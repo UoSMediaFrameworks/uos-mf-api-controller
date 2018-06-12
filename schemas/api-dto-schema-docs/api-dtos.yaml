@@ -59,6 +59,10 @@ definitions:
              type: string
          rescaleFactor:
              type: number
+         themeName:
+             type: string
+             required: false
+
  SceneVisualLayerChange:
      type: object
      required:
