@@ -271,7 +271,7 @@ definitions:
                               type: string
                               required: false
                               description: the theme to use to apply the audio delta to
-                          rescaleFactor:
+                          volume:
                               type: number
                               description: scale the audio by the factor provided, must be between 0 and 1
       tagFilter:
