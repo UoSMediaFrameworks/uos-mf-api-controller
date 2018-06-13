@@ -767,7 +767,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             const apiLimiter = new RateLimit({
                 windowMs: 1000, // 1 second
-                max: 5,
+                max: 1000,
                 delayMs: 0 // disabled
             });
 
