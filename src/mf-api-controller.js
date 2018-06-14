@@ -72,6 +72,91 @@ class MediaframeApiController extends MediaframeworkHubController {
 
         /**
          * @swagger
+         * /playback/scene/audio/step/up:
+         *  post:
+         *      description: Step all audio within a scene at runtime
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: stepAudioForScene
+         *            description: Details required for stepping audio in a scene and stepping through the rescaling
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/SceneAudioStep'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         *          429:
+         *              description : Rate limited end point rejecting post - resend value after cool down
+         */
+        router.post('/scene/audio/step/up', function (req, res) {
+            console.log("/playback/scene/audio/step/up");
+
+            let roomId = "";
+            let audioStepUpPayload = req.body;
+            audioStepUpPayload["step"] = 1;
+
+            console.log(audioStepUpPayload);
+
+            self.commandAPIController.sendCommand(roomId, "sceneAudioStep", req.body);
+
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/scene/audio/step/down:
+         *  post:
+         *      description: Step all audio within a scene at runtime
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: stepAudioForScene
+         *            description: Details required for stepping audio in a scene and stepping through the rescaling
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/SceneAudioStep'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         *          429:
+         *              description : Rate limited end point rejecting post - resend value after cool down
+         */
+        router.post('/scene/audio/step/down', function (req, res) {
+            console.log("/playback/scene/audio/down");
+            console.log(req.body);
+
+            let roomId = "";
+            let audioStepUpPayload = req.body;
+            audioStepUpPayload["step"] = -1;
+
+            console.log(audioStepUpPayload);
+
+            self.commandAPIController.sendCommand(roomId, "sceneAudioStep", req.body);
+
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
          * /playback/scene/visual-layer/update:
          *  post:
          *      description: Updates the visual layer for all render able media within a scene at runtime

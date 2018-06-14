@@ -63,6 +63,16 @@ definitions:
              type: string
              required: false
 
+ SceneAudioStep:
+      type: object
+      required:
+          - sceneId
+      properties:
+          sceneId:
+              type: string
+          themeName:
+              type: string
+
  SceneVisualLayerChange:
      type: object
      required:
