@@ -141,14 +141,21 @@ definitions:
              type: string
  PlaySceneTheme:
      type: object
+     required:
+         - sceneTheme
      properties:
          roomId:
              type: string
          sceneTheme:
              type: object
              $ref: '#/definitions/SceneTheme'
+         volume:
+             type: number
+             description: "Scale volume for all matching audio within the content selection"
  SceneTheme:
      type: object
+     required:
+         - scene
      properties:
          scene:
              type: string

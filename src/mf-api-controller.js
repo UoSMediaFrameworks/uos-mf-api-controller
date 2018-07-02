@@ -22,6 +22,10 @@ class MediaframeApiController extends MediaframeworkHubController {
             EnvironmentId: config.htmlControllerEnvironmentId,
             EnvironmentName: config.htmlControllerEnvironmentName
         };
+
+        this.dataController = null;
+        this.commandAPIController = null;
+        this.subscribeController = null;
     }
 
     playbackRoutes() {
@@ -429,7 +433,7 @@ class MediaframeApiController extends MediaframeworkHubController {
          *          - application/json
          *      parameters:
          *          - in: body
-         *            name: play
+         *            name: body
          *            description: A play request
          *            required: true
          *            schema:
@@ -447,12 +451,49 @@ class MediaframeApiController extends MediaframeworkHubController {
             console.log("/playback/scene/theme/show'");
             console.log(req.body);
 
-            self.commandAPIController.playSceneAndThemes(req.body.roomId, {
-                scenes: [req.body.sceneTheme.scene],
-                themes: [req.body.sceneTheme.theme]
-            }, function () {
-                res.json({ack: true});
-            });
+            let roomId = req.body.roomId;
+            let commandName = CommandAPIController.getCommandKeys().PLAY_SCENE_THEME_SINGULAR_COMMAND_NAME;
+            let commandValue = _.pick(req.body, ["sceneTheme", "volume"]);
+
+            self.commandAPIController.sendCommand(roomId, commandName, commandValue);
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/scene/theme/stop:
+         *  post:
+         *      description: Stop a scene theme
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: body
+         *            description: Stop a play request
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/PlaySceneTheme'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         */
+        router.post('/scene/theme/stop', function (req, res) {
+
+            console.log("/playback/scene/theme/stop'");
+            console.log(req.body);
+
+            let roomId = req.body.roomId;
+            let commandName = CommandAPIController.getCommandKeys().PLAY_SCENE_THEME_SINGULAR_COMMAND_NAME;
+            let commandValue = _.pick(req.body, ["sceneTheme", "volume"]);
+
+            self.commandAPIController.sendCommand(roomId, commandName, commandValue);
+            res.json({ack: true});
         });
 
         /**
