@@ -46,7 +46,7 @@ class MediaframeApiController extends MediaframeworkHubController {
          *          - application/json
          *      parameters:
          *          - in: body
-         *            name: rescaleAudioForScene
+         *            name: body
          *            description: Details required for rescaling, the scene id and rescale factor between 0 and 1
          *            required: true
          *            schema:
@@ -69,7 +69,46 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             let roomId = "";
 
-            self.commandAPIController.sendCommand(roomId, "sceneAudioScale", req.body);
+            self.commandAPIController.sendCommand(roomId, CommandAPIController.getCommandKeys().PLAYBACK_SCENE_AUDIO_SCALE, req.body);
+
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/scene/list/audio/scale:
+         *  post:
+         *      description: Rescale all audio for each scene at runtime
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: body
+         *            description: Details required for rescaling, the scene id and rescale factor between 0 and 1
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/SceneListAudioRescale'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         *          429:
+         *              description : Rate limited end point rejecting post - resend value after cool down
+         */
+        router.post('/scene/list/audio/scale', function (req, res) {
+            console.log("/playback/scene/list/audio/scale");
+            console.log(req.body);
+
+            let roomId = "";
+
+            self.commandAPIController.sendCommand(roomId, CommandAPIController.getCommandKeys().PLAYBACK_SCENE_AUDIO_SCALE_LIST, req.body);
 
             res.json({ack: true});
         });
@@ -111,7 +150,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             console.log(audioStepUpPayload);
 
-            self.commandAPIController.sendCommand(roomId, "sceneAudioStep", req.body);
+            self.commandAPIController.sendCommand(roomId, CommandAPIController.getCommandKeys().PLAYBACK_SCENE_AUDIO_STEP, req.body);
 
             res.json({ack: true});
         });
@@ -154,7 +193,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             console.log(audioStepUpPayload);
 
-            self.commandAPIController.sendCommand(roomId, "sceneAudioStep", req.body);
+            self.commandAPIController.sendCommand(roomId, CommandAPIController.getCommandKeys().PLAYBACK_SCENE_AUDIO_STEP, req.body);
 
             res.json({ack: true});
         });
@@ -228,7 +267,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             let roomId = "";
 
-            self.commandAPIController.sendCommand(roomId, "applyNamedSceneConfig", req.body);
+            self.commandAPIController.sendCommand(roomId, CommandAPIController.getCommandKeys().PLAYBACK_SCENE_CONFIG_APPLY_BY_NAME, req.body);
 
             res.json({ack: true});
         });
@@ -265,7 +304,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             let roomId = "";
 
-            self.commandAPIController.sendCommand(roomId, "applySceneConfig", req.body);
+            self.commandAPIController.sendCommand(roomId, CommandAPIController.getCommandKeys().PLAYBACK_SCENE_CONFIG_APPLY, req.body);
 
             res.json({ack: true});
         });

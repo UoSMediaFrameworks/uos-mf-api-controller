@@ -49,6 +49,12 @@ definitions:
          play:
              type: object
              $ref: '#/definitions/PlayScenesAndThemes'
+
+ SceneListAudioRescale:
+     type: array
+     items:
+         $ref: "#/definitions/SceneAudioRescale"
+
  SceneAudioRescale:
      type: object
      required:

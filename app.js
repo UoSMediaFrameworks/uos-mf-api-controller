@@ -10,7 +10,7 @@ const options = {
     swaggerDefinition: {
         info: {
             title: 'uos-mf-api-controller', // Title (required)
-            version: '0.1.2', // Version (required)
+            version: '0.1.3', // Version (required)
         },
         "host": process.env.SWAGGER_HOST || "localhost:3000",
         "schemes": ["http", "https"]
