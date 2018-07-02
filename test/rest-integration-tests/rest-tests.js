@@ -69,7 +69,7 @@ describe('RestTests', function () {
                 pathName: '/playback/scene/audio/scale',
                 method: "POST",
                 parameters: {
-                    rescaleAudioForScene: data
+                    body: data
                 },
                 requestInterceptor: function (req) {
                     req.headers["x-api-key"] = token;
