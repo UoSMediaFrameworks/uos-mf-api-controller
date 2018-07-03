@@ -155,7 +155,7 @@ definitions:
          sceneTheme:
              type: object
              $ref: '#/definitions/SceneTheme'
-         volume:
+         audioScaleFactor:
              type: number
              description: "Scale volume for all matching audio within the content selection"
  SceneTheme:
