@@ -299,6 +299,9 @@ definitions:
                               description: scale the audio by the factor provided, must be between 0 and 1
       tagFilter:
           type: object
+          properties:
+              tagStatement:
+                  type: string
       themeFilter:
           type: object
       transitionOptions:
