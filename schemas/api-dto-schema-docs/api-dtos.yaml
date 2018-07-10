@@ -158,6 +158,9 @@ definitions:
          audioScaleFactor:
              type: number
              description: "Scale volume for all matching audio within the content selection"
+         ceramicChapterLapsedTime:
+             type: number
+             description: "The lapsed time since chapter start, allow project specific scene config mapping"
  SceneTheme:
      type: object
      required:
@@ -299,6 +302,9 @@ definitions:
                               description: scale the audio by the factor provided, must be between 0 and 1
       tagFilter:
           type: object
+          properties:
+              tagStatement:
+                  type: string
       themeFilter:
           type: object
       transitionOptions:
