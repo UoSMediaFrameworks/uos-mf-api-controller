@@ -1,0 +1,19 @@
+definitions:
+  CeramicPlaySceneTheme:
+      allOf:
+          - $ref: '#/definitions/PlaySceneTheme'
+          - type: object
+            required:
+                - sceneTheme
+            properties:
+                roomId:
+                    type: string
+                sceneTheme:
+                    type: object
+                    $ref: '#/definitions/SceneTheme'
+                audioScaleFactor:
+                    type: number
+                    description: "Scale volume for all matching audio within the content selection"
+                ceramicChapterLapsedTime:
+                    type: number
+                    description: "The lapsed time since chapter start, allow project specific scene config mapping"

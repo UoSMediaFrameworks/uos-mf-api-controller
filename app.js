@@ -19,6 +19,7 @@ const options = {
         './schemas/security-schema.yaml',
         './schemas/db-schema-docs/db-schema.yaml',
         './schemas/api-dto-schema-docs/api-dtos.yaml',
+        './schemas/api-dto-schema-docs/ceramic-project-api-dtos.yaml',
         './src/mf-api-controller.js',
     ]
 };

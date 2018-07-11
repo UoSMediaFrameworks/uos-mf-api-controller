@@ -5,6 +5,8 @@ const MediaframeworkHubController = require("./mf-hub-controller");
 const DataController = require("uos-legacy-hub-controller/src/modules/controllers/data-controller");
 const CommandAPIController = require("./controllers/command-api-controller");
 const SubscribeController = require("uos-legacy-hub-controller/src/modules/controllers/subscribe-controller");
+const LegacyCommandAPIController = require("uos-legacy-hub-controller/src/modules/controllers/command-api-controller"),
+    CommandApiKeys = LegacyCommandAPIController.getCommandKeys();
 
 const request = require("request");
 const _ = require("lodash");
@@ -69,7 +71,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             let roomId = "";
 
-            self.commandAPIController.sendCommand(roomId, CommandAPIController.getCommandKeys().PLAYBACK_SCENE_AUDIO_SCALE, req.body);
+            self.commandAPIController.sendCommand(roomId, CommandApiKeys.PLAYBACK_SCENE_AUDIO_SCALE, req.body);
 
             res.json({ack: true});
         });
@@ -108,7 +110,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             let roomId = "";
 
-            self.commandAPIController.sendCommand(roomId, CommandAPIController.getCommandKeys().PLAYBACK_SCENE_AUDIO_SCALE_LIST, req.body);
+            self.commandAPIController.sendCommand(roomId, CommandApiKeys.PLAYBACK_SCENE_AUDIO_SCALE_LIST, req.body);
 
             res.json({ack: true});
         });
@@ -150,7 +152,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             console.log(audioStepUpPayload);
 
-            self.commandAPIController.sendCommand(roomId, CommandAPIController.getCommandKeys().PLAYBACK_SCENE_AUDIO_STEP, req.body);
+            self.commandAPIController.sendCommand(roomId, CommandApiKeys.PLAYBACK_SCENE_AUDIO_STEP, req.body);
 
             res.json({ack: true});
         });
@@ -193,7 +195,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             console.log(audioStepUpPayload);
 
-            self.commandAPIController.sendCommand(roomId, CommandAPIController.getCommandKeys().PLAYBACK_SCENE_AUDIO_STEP, req.body);
+            self.commandAPIController.sendCommand(roomId, CommandApiKeys.PLAYBACK_SCENE_AUDIO_STEP, req.body);
 
             res.json({ack: true});
         });
@@ -267,7 +269,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             let roomId = "";
 
-            self.commandAPIController.sendCommand(roomId, CommandAPIController.getCommandKeys().PLAYBACK_SCENE_CONFIG_APPLY_BY_NAME, req.body);
+            self.commandAPIController.sendCommand(roomId, CommandApiKeys.PLAYBACK_SCENE_CONFIG_APPLY_BY_NAME, req.body);
 
             res.json({ack: true});
         });
@@ -304,7 +306,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             let roomId = "";
 
-            self.commandAPIController.sendCommand(roomId, CommandAPIController.getCommandKeys().PLAYBACK_SCENE_CONFIG_APPLY, req.body);
+            self.commandAPIController.sendCommand(roomId, CommandApiKeys.PLAYBACK_SCENE_CONFIG_APPLY, req.body);
 
             res.json({ack: true});
         });
@@ -491,7 +493,8 @@ class MediaframeApiController extends MediaframeworkHubController {
             console.log(req.body);
 
             let roomId = req.body.roomId;
-            let commandName = CommandAPIController.getCommandKeys().PLAY_SCENE_THEME_SINGULAR_COMMAND_NAME;
+            let commandName = CommandApiKeys.PLAY_SCENE_THEME_SINGULAR_COMMAND_NAME;
+            console.log(commandName);
             let commandValue = _.pick(req.body, ["sceneTheme", "audioScaleFactor"]);
 
             self.commandAPIController.sendCommand(roomId, commandName, commandValue);
@@ -528,7 +531,7 @@ class MediaframeApiController extends MediaframeworkHubController {
             console.log(req.body);
 
             let roomId = req.body.roomId;
-            let commandName = CommandAPIController.getCommandKeys().STOP_PLAY_SCENE_THEME_SINGULAR_COMMAND_NAME;
+            let commandName = CommandApiKeys.STOP_PLAY_SCENE_THEME_SINGULAR_COMMAND_NAME;
             let commandValue = _.pick(req.body, ["sceneTheme", "audioScaleFactor"]);
 
             self.commandAPIController.sendCommand(roomId, commandName, commandValue);
@@ -916,6 +919,91 @@ class MediaframeApiController extends MediaframeworkHubController {
         return router;
     }
 
+    ceramicPlaybackRoutes() {
+
+        let self = this;
+
+        let router = express.Router();
+
+        self.app.use(self.requireToken.bind(self), router);
+
+        /**
+         * @swagger
+         * /ceramic/playback/scene/theme/show:
+         *  post:
+         *      description: Show scene theme - for the ceramic project
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: body
+         *            description: A play request
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/CeramicPlaySceneTheme'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         */
+        router.post('/scene/theme/show', function (req, res) {
+
+            console.log("/ceramic/playback/scene/theme/show'");
+            console.log(req.body);
+
+            let roomId = req.body.roomId;
+            let commandName = CommandApiKeys.PROJECT.CERAMIC.PLAY_SCENE_THEME_SINGULAR_COMMAND_NAME;
+            let commandValue = _.pick(req.body, ["sceneTheme", "audioScaleFactor", "ceramicChapterLapsedTime"]);
+
+            self.commandAPIController.sendCommand(roomId, commandName, commandValue);
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /ceramic/playback/scene/theme/stop:
+         *  post:
+         *      description: Stop a scene theme - for the ceramic project
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: body
+         *            description: Stop a play request
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/CeramicPlaySceneTheme'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         */
+        router.post('/scene/theme/stop', function (req, res) {
+
+            console.log("/ceramic/playback/scene/theme/stop'");
+            console.log(req.body);
+
+            let roomId = req.body.roomId;
+            let commandName = CommandApiKeys.PROJECT.CERAMIC.STOP_PLAY_SCENE_THEME_SINGULAR_COMMAND_NAME;
+            let commandValue = _.pick(req.body, ["sceneTheme", "audioScaleFactor", "ceramicChapterLapsedTime"]);
+
+            self.commandAPIController.sendCommand(roomId, commandName, commandValue);
+            res.json({ack: true});
+        });
+
+        return router;
+    }
+
     init(callback) {
         const self = this;
 
@@ -983,6 +1071,9 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             let sceneRouter = self.sceneRoutes().bind(self);
             self.app.use('/scene', sceneRouter);
+
+            let ceramicProjectRouter = self.ceramicPlaybackRoutes().bind(self);
+            self.app.use('/ceramic/playback', ceramicProjectRouter);
 
             // APEP host the playback API behind require pass key token security
             self.app.use(self.requireToken.bind(self), self.router);
