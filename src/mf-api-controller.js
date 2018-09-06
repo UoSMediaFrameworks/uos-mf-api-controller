@@ -6,6 +6,11 @@ const DataController = require("uos-legacy-hub-controller/src/modules/controller
 const CommandAPIController = require("./controllers/command-api-controller");
 const SubscribeController = require("uos-legacy-hub-controller/src/modules/controllers/subscribe-controller");
 
+const ControllerRestartService = require("services/controller-restart-service"),
+    Pm2ControllerRestartService = ControllerRestartService.Pm2ControllerRestartService,
+    ElasticBeanstalkControllerRestartService = ControllerRestartService.AwsControllerRestartService,
+    LOCAL_ENV_CONTROLLER = ControllerRestartService.LOCAL_ENV_CONTROLLER;
+
 const request = require("request");
 const _ = require("lodash");
 const express = require('express');
@@ -22,6 +27,9 @@ class MediaframeApiController extends MediaframeworkHubController {
             EnvironmentId: config.htmlControllerEnvironmentId,
             EnvironmentName: config.htmlControllerEnvironmentName
         };
+
+        // APEP Reuse config to detect local environment usin the pm2 const and AWS as any other EnvironmentId
+        this.controllerRestartService = this.HTML_RANDOM_CONTROLLER_RESET_PARAMS.EnvironmentId === LOCAL_ENV_CONTROLLER ? new Pm2ControllerRestartService(config) : new ElasticBeanstalkControllerRestartService(config);
 
         this.dataController = null;
         this.commandAPIController = null;
@@ -623,6 +631,7 @@ class MediaframeApiController extends MediaframeworkHubController {
          *              properties:
          *                  ResponseMetadata:
          *                      type: object
+         *                      required: false
          *                      properties:
          *                          RequestId:
          *                              type: string
@@ -631,17 +640,15 @@ class MediaframeApiController extends MediaframeworkHubController {
          *              type: object
          */
         router.post('/controller/html/random/reset', function (req, res) {
-            let elasticbeanstalk = new AWS.ElasticBeanstalk({region: "eu-west-1"});
-
-            elasticbeanstalk.restartAppServer(self.HTML_RANDOM_CONTROLLER_RESET_PARAMS, function(err, data) {
-                if (err) {
-                    console.log(err, err.stack); // an error occurred
-                    return res.status(400).json(err);
-                } else {
+            self.controllerRestartService.restart()
+                .then((data) => {
                     console.log(data);           // successful response
                     return res.status(200).json(data);
-                }
-            });
+                })
+                .catch((err) => {
+                    console.log(err, err.stack); // an error occurred
+                    return res.status(400).json(err);
+                });
         });
 
         /**
@@ -991,6 +998,7 @@ class MediaframeApiController extends MediaframeworkHubController {
                 callback();
         });
     }
+
     //TODO: We have talked about removing this.
     clientSocketSuccessfulAuth(socket) {
         var self = this;
