@@ -6,7 +6,7 @@ const DataController = require("uos-legacy-hub-controller/src/modules/controller
 const CommandAPIController = require("./controllers/command-api-controller");
 const SubscribeController = require("uos-legacy-hub-controller/src/modules/controllers/subscribe-controller");
 
-const ControllerRestartService = require("services/controller-restart-service"),
+const ControllerRestartService = require("./services/controller-restart-service"),
     Pm2ControllerRestartService = ControllerRestartService.Pm2ControllerRestartService,
     ElasticBeanstalkControllerRestartService = ControllerRestartService.AwsControllerRestartService,
     LOCAL_ENV_CONTROLLER = ControllerRestartService.LOCAL_ENV_CONTROLLER;
