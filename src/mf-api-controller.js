@@ -397,6 +397,36 @@ class MediaframeApiController extends MediaframeworkHubController {
 
         /**
          * @swagger
+         * /playback/refresh:
+         *  post:
+         *      description: Refresh the playback media engines
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         */
+        router.post('/refresh', function (req, res) {
+
+            console.log("/playback/refresh");
+
+            let roomid = "";
+
+            self.commandAPIController.sendCommand(roomid, "mediaEngineRefresh");
+
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
          * /playback/scenes/show:
          *  post:
          *      description: Show scenes
