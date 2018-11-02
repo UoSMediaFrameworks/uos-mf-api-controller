@@ -503,7 +503,7 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scene/theme/show:
          *  post:
-         *      description: Show scene theme
+         *      description: Show scene theme - primary API method
          *      consumes:
          *          - application/json
          *      produces:
@@ -530,7 +530,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             let roomId = req.body.roomId;
             let commandName = CommandAPIController.getCommandKeys().PLAY_SCENE_THEME_SINGULAR_COMMAND_NAME;
-            let commandValue = _.pick(req.body, ["sceneTheme", "audioScaleFactor"]);
+            let commandValue = _.pick(req.body, ["sceneTheme", "audioScaleFactor", "context"]);
 
             self.commandAPIController.sendCommand(roomId, commandName, commandValue);
             res.json({ack: true});
@@ -567,7 +567,7 @@ class MediaframeApiController extends MediaframeworkHubController {
 
             let roomId = req.body.roomId;
             let commandName = CommandAPIController.getCommandKeys().STOP_PLAY_SCENE_THEME_SINGULAR_COMMAND_NAME;
-            let commandValue = _.pick(req.body, ["sceneTheme", "audioScaleFactor"]);
+            let commandValue = _.pick(req.body, ["sceneTheme", "audioScaleFactor", "context"]);
 
             self.commandAPIController.sendCommand(roomId, commandName, commandValue);
             res.json({ack: true});

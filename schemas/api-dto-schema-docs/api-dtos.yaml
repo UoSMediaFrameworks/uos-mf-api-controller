@@ -158,6 +158,17 @@ definitions:
          audioScaleFactor:
              type: number
              description: "Scale volume for all matching audio within the content selection"
+         context:
+             type: object
+             $ref: '#/definitions/InteractiveContext'
+
+ InteractiveContext:
+     type: object
+     description: "Two contextual identifiers, id intended to be static and guid is unique for a pairs of events"
+     properties:
+        guid: string
+        id: string
+
  SceneTheme:
      type: object
      required:
