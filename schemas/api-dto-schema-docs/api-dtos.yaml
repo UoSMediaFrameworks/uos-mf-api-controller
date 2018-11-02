@@ -166,8 +166,10 @@ definitions:
      type: object
      description: "Two contextual identifiers, id intended to be static and guid is unique for a pairs of events"
      properties:
-        guid: string
-        id: string
+        guid:
+           type: string
+        id:
+           type: string
 
  SceneTheme:
      type: object
