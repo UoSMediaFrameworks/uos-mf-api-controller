@@ -74,6 +74,7 @@ java -jar swagger-codegen-cli-2.2.3.jar generate -i http://localhost:3001/api-do
 java -jar swagger-codegen-cli-2.2.3.jar generate -i http://dev-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/dev_csharp_api_client_0_0_6rc1
 java -jar swagger-codegen-cli-2.2.3.jar generate -i http://prod-uos-mf-api.eu-west-1.elasticbeanstalk.com/api-docs.json -l csharp -o dist/prod_csharp_api_client_0_0_6rc2
 java -jar swagger-codegen-cli-2.2.3.jar generate -i https://staging-api.mediaframeworkdevs.uk/api-docs.json -l csharp -o dist/csharp_api_client_0_1_3rc1
+java -jar swagger-codegen-cli-2.2.3.jar generate -i http://localhost:3001/api-docs.json -l csharp -o dist/csharp_api_client_0_1_5rc1
 ```
 
 ### Building from deployed environment

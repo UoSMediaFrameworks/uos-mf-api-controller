@@ -13,23 +13,32 @@ definitions:
       text:
         type: number
         required: false
+      _3d:
+        type: number
+        required: false
+
+  FileObjectSchema:
+    properties:
+      url:
+        type: string
+        required: false
+      type:
+        type: string
+        description: "File mime type as uploaded"
+        required: false
+      name:
+        type: string
+        description: "File name as authored"
+        required: false
+      size:
+        type: number
+        description: "File size in bytes"
+        required: false
 
   VideoMediaObjectSchema:
     properties:
-      path:
-        type: string
-        required: false
       hasTranscoded:
         type: boolean
-        required: false
-      transcoder:
-        type: number
-        required: false
-      vimeoId:
-        type: string
-        required: false
-      description:
-        type: string
         required: false
       uploadedTimestamp:
         type: string
@@ -41,44 +50,35 @@ definitions:
         type: string
         required: false
       video:
-        type: mixed
+        type: object
+        $ref: "#/definitions/FileObjectSchema"
         required: false
       _id:
         type: string
         required: false
+
   ImageMediaObjectSchema:
     properties:
-      path:
-        type: string
-        required: false
-      sceneId:
-        type: string
-        required: false
       image:
-        type: mixed
+        type: object
+        $ref: "#/definitions/FileObjectSchema"
         required: false
       thumbnail:
-        type: mixed
+        type: object
+        $ref: "#/definitions/FileObjectSchema"
         required: false
       resized:
-        type: mixed
+        type: object
+        $ref: "#/definitions/FileObjectSchema"
         required: false
       _id:
         type: string
         required: false
+
   AudioMediaObjectSchema:
     properties:
-      path:
-        type: string
-        required: false
       hasTranscoded:
         type: boolean
-        required: false
-      description:
-        type: string
-        required: false
-      uploadedTimestamp:
-        type: string
         required: false
       transcodedTimestamp:
         type: string
@@ -87,117 +87,119 @@ definitions:
         type: string
         required: false
       audio:
-        type: mixed
+        type: object
+        $ref: "#/definitions/FileObjectSchema"
         required: false
       _id:
         type: string
         required: false
+
   MediaSceneSchema:
-      properties:
-        _id:
-          type: string
-          required: true
-        name:
-          type: string
-          required: true
-        config:
-          type: array
-          required: false
-          items:
-            $ref: "#/definitions/ApplySceneConfig"
-        version:
-          type: string
-          required: false
-        maximumOnScreen:
-          type: object
-          required: false
-          $ref: "#/definitions/MaxOnScreenSchema"
-        displayDuration:
-          type: number
-          required: false
-        displayInterval:
-          type: number
-          required: false
-        transitionDuration:
-          type: number
-          required: false
-        isLinear:
-          type: string
-          required: false
-        isLinearOptions:
-          type: string
-          required: false
-        forceFullSequencePlayback:
-          type: boolean
-          required: false
-        themes:
-          type: array
-          required: false
-          items:
-            $ref: "#/definitions/ThemeSchema"
-        style:
-          type: mixed
-          required: false
-        scene:
-          type: array
-          items:
-            $ref: "#/definitions/MediaAssetSchema"
+    properties:
+      _id:
+        type: string
+        required: true
+      name:
+        type: string
+        required: true
+      config:
+        type: array
+        required: false
+        items:
+          $ref: "#/definitions/ApplySceneConfig"
+      version:
+        type: string
+        required: false
+      maximumOnScreen:
+        type: object
+        required: false
+        $ref: "#/definitions/MaxOnScreenSchema"
+      displayDuration:
+        type: number
+        required: false
+      displayInterval:
+        type: number
+        required: false
+      transitionDuration:
+        type: number
+        required: false
+      isLinear:
+        type: string
+        required: false
+      isLinearOptions:
+        type: string
+        required: false
+      forceFullSequencePlayback:
+        type: boolean
+        required: false
+      themes:
+        type: array
+        required: false
+        items:
+          $ref: "#/definitions/ThemeSchema"
+      style:
+        type: mixed
+        required: false
+      scene:
+        type: array
+        items:
+          $ref: "#/definitions/MediaAssetSchema"
 
   ThemeSchema:
-      properties:
-        name:
-          type: string
-          required: true
-        value:
-          type: string
-          required: true
+    properties:
+      name:
+        type: string
+        required: true
+      value:
+        type: string
+        required: true
 
   MediaAssetSchema:
-      properties:
-        type:
-          type: string
-          required: false
-        url:
-          type: string
-          required: false
-        style:
-          type: mixed
-          required: false
-        autoreplay:
-          type: number
-          required: false
-        tags:
-          type: string
-          required: false
-        sequenceNumber:
-          type: number
-          required: false
-        cuePointEvents:
-          type: array
-          items:
-            properties:
-              timeElapsed:
-                type: number
-                required: false
-              themes:
-                type: array
-                items:
-                  type: object
-              _id:
-                type: string
-                required: false
-        text:
-          type: string
-          required: false
-        vmob:
-          type: object
-          $ref: "#/definitions/VideoMediaObjectSchema"
-        imob:
-          type: object
-          $ref: "#/definitions/ImageMediaObjectSchema"
-        amob:
-          type: object
-          $ref: "#/definitions/AudioMediaObjectSchema"
-        _id:
-          type: string
-          required: false
+    properties:
+      type:
+        type: string
+        required: false
+      url:
+        type: string
+        required: false
+      style:
+        type: mixed
+        required: false
+      autoreplay:
+        type: number
+        required: false
+      tags:
+        type: string
+        required: false
+      sequenceNumber:
+        type: number
+        required: false
+      cuePointEvents:
+        type: array
+        items:
+          properties:
+            timeElapsed:
+              type: number
+              required: false
+            themes:
+              type: array
+              items:
+                type: object
+            _id:
+              type: string
+              required: false
+      text:
+        type: string
+        required: false
+      vmob:
+        type: object
+        $ref: "#/definitions/VideoMediaObjectSchema"
+      imob:
+        type: object
+        $ref: "#/definitions/ImageMediaObjectSchema"
+      amob:
+        type: object
+        $ref: "#/definitions/AudioMediaObjectSchema"
+      _id:
+        type: string
+        required: false
