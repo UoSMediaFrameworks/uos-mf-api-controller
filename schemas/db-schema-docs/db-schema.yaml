@@ -200,6 +200,16 @@ definitions:
       amob:
         type: object
         $ref: "#/definitions/AudioMediaObjectSchema"
+      _texs:
+        type: array
+        description: "(Experimental) Simple list of URIs for any textures for a media object"
+        required: false
+        items:
+          type: string
+      _renderTargetId:
+        type: string
+        description: "(Experimental) Simple id for a render target"
+        required: false
       _id:
         type: string
         required: false
