@@ -47,6 +47,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scene/audio/scale:
          *  post:
+         *      tags:
+         *          - Playback
          *      description: Rescale all audio within a scene at runtime
          *      consumes:
          *          - application/json
@@ -86,6 +88,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scene/list/audio/scale:
          *  post:
+         *      tags:
+         *          - Playback
          *      description: Rescale all audio for each scene at runtime
          *      consumes:
          *          - application/json
@@ -125,6 +129,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scene/audio/step/up:
          *  post:
+         *      tags:
+         *          - Playback
          *      description: Step all audio within a scene at runtime
          *      consumes:
          *          - application/json
@@ -167,6 +173,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scene/audio/step/down:
          *  post:
+         *      tags:
+         *          - Playback
          *      description: Step all audio within a scene at runtime
          *      consumes:
          *          - application/json
@@ -210,6 +218,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scene/visual-layer/update:
          *  post:
+         *      tags:
+         *          - Playback
          *      description: Updates the visual layer for all render able media within a scene at runtime
          *      consumes:
          *          - application/json
@@ -247,6 +257,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scene/config/apply/byname:
          *  post:
+         *      tags:
+         *          - Playback
          *      description: Applies a pre authored named config for a scene
          *      consumes:
          *          - application/json
@@ -284,6 +296,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scene/config/apply:
          *  post:
+         *      tags:
+         *          - Playback
          *      description: Applies a new named config for a scene (runtime only)
          *      consumes:
          *          - application/json
@@ -321,6 +335,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scenes/themes/show:
          *  post:
+         *      tags:
+         *          - Semantics
          *      description: Playback scene and theme combinations from the provided scenes and themes.  This API call is designed to be used as a single shot of every scene-theme you want to playback.
          *      consumes:
          *          - application/json
@@ -361,6 +377,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scenes/themes/reset:
          *  post:
+         *      tags:
+         *          - Semantics
          *      description: Reset the playback engine
          *      consumes:
          *          - application/json
@@ -399,6 +417,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/refresh:
          *  post:
+         *      tags:
+         *          - Media Engine
          *      description: Refresh the playback media engines
          *      consumes:
          *          - application/json
@@ -429,6 +449,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scenes/show:
          *  post:
+         *      tags:
+         *          - Semantics
          *      description: Show scenes
          *      consumes:
          *          - application/json
@@ -466,6 +488,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scene/show:
          *  post:
+         *      tags:
+         *          - Semantics
          *      description: Show scene
          *      consumes:
          *          - application/json
@@ -503,6 +527,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scene/theme/show:
          *  post:
+         *      tags:
+         *          - Semantics
          *      description: Show scene theme
          *      consumes:
          *          - application/json
@@ -540,6 +566,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/scene/theme/stop:
          *  post:
+         *      tags:
+         *          - Semantics
          *      description: Stop a scene theme
          *      consumes:
          *          - application/json
@@ -577,6 +605,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/theme/show:
          *  post:
+         *      tags:
+         *          - Semantics
          *      description: Show theme
          *      consumes:
          *          - application/json
@@ -613,7 +643,9 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/tag/matcher/set:
          *  post:
-         *      description: Set a tag matcher
+         *      tags:
+         *          - Semantics
+         *      description: Set a tag matcher (Experimental)
          *      consumes:
          *          - application/json
          *      produces:
@@ -647,6 +679,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/controller/html/random/reset:
          *  post:
+         *      tags:
+         *          - Infastructure
          *      description: Restart the html random controller for dynamic data updates
          *      consumes:
          *          - application/json
@@ -685,6 +719,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/media/show:
          *  post:
+         *      tags:
+         *          - Media
          *      description: Playback media
          *      consumes:
          *          - application/json
@@ -715,6 +751,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/media/transitioning:
          *  post:
+         *      tags:
+         *          - Media
          *      description: When a client begins transitioning a piece of media
          *      consumes:
          *          - application/json
@@ -745,6 +783,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /playback/media/done:
          *  post:
+         *      tags:
+         *          - Media
          *      description: When a client begins transitioning a piece of media
          *      consumes:
          *          - application/json
@@ -830,6 +870,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /scene/list:
          *  get:
+         *      tags:
+         *          - Scene
          *      description: Get a list of media scenes (_id, names and _groupID)
          *      consumes:
          *          - application/json
@@ -865,6 +907,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * /scene/find/by/name:
          *  get:
          *      description: Get a media scene.
+         *      tags:
+         *          - Scene
          *      consumes:
          *          - application/json
          *      produces:
@@ -908,6 +952,8 @@ class MediaframeApiController extends MediaframeworkHubController {
          * @swagger
          * /scene/full:
          *  get:
+         *      tags:
+         *          - Scene
          *      description: Get a media scene with any uploaded media object full database details appended.
          *      consumes:
          *          - application/json
@@ -980,6 +1026,8 @@ class MediaframeApiController extends MediaframeworkHubController {
              * @swagger
              * /auth/token/get:
              *  post:
+             *      tags:
+             *          - Authentication
              *      description: As a client, get a valid session token for the API
              *      consumes:
              *          - application/json
