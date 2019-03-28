@@ -1,6 +1,6 @@
 {
   "name": "uos-mf-api",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "private": true,
   "main": "app.js",
   "scripts": {
@@ -12,9 +12,9 @@
     "url": "git+https://github.com/UoSMediaFrameworks/uos-mf-api-controller.git"
   },
   "engines": {
-    "node": "4.8.x"
+    "node": "6.X"
   },
-  "author": "",
+  "author": "UoS SIMT",
   "license": "MIT",
   "devDependencies": {
     "mongoose-to-swagger": "aaronpcz/mongoose-to-swagger",
@@ -37,7 +37,7 @@
     "swagger-client": "^3.3.2",
     "swagger-jsdoc": "^1.9.7",
     "swagger-ui-dist": "^3.3.2",
-    "uos-legacy-hub-controller": "github:uosmediaframeworks/uos-legacy-hub-controller",
+    "uos-legacy-hub-controller": "uosmediaframeworks/uos-legacy-hub-controller#0.2.0",
     "uos-mf-db-schemas": "uosmediaframeworks/uos-mf-db-schemas#0.0.2rc1"
   }
 }

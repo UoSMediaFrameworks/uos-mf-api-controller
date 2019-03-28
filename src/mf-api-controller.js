@@ -45,6 +45,183 @@ class MediaframeApiController extends MediaframeworkHubController {
 
         /**
          * @swagger
+         * /playback/node/content/show:
+         *  post:
+         *      tags:
+         *          - Node
+         *      description: Trigger a content node to play, this API call is to be used alongside /node/content/stop
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: body
+         *            description: The content node schema
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/ContentNode'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         *          429:
+         *              description : Rate limited end point rejecting post - resend value after cool down
+         */
+        router.post('/playback/node/content/show', function(req, res) {
+            console.log('/playback/node/content/show');
+            console.log(req.body);
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/node/content/stop:
+         *  post:
+         *      tags:
+         *          - Node
+         *      description: Trigger to stop a content node if play, this API call is to be used alongside /node/content/show
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: body
+         *            description: The content node schema
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/ContentNode'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         *          429:
+         *              description : Rate limited end point rejecting post - resend value after cool down
+         */
+        router.post('/playback/node/content/stop', function(req, res) {
+            console.log('/playback/node/content/stop');
+            console.log(req.body);
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/node/content/replace:
+         *  post:
+         *      tags:
+         *          - Node
+         *      description: Trigger to force a content node to play, this method displaces any previous selections
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: body
+         *            description: The content node schema
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/ContentNode'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         *          429:
+         *              description : Rate limited end point rejecting post - resend value after cool down
+         */
+        router.post('/playback/node/content/replace', function(req, res) {
+            console.log('/playback/node/content/replace');
+            console.log(req.body);
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/region/audio/scale:
+         *  post:
+         *      tags:
+         *          - Region
+         *      description: Update audio volume for all content, selected to play in a region
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: body
+         *            description: TODO
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         *          429:
+         *              description : Rate limited end point rejecting post - resend value after cool down
+         */
+        router.post('/playback/region/audio/scale', function(req, res) {
+            console.log('/playback/region/audio/scale');
+            console.log(req.body);
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
+         * /playback/player/regions/config/set:
+         *  post:
+         *      tags:
+         *          - Region
+         *      description: Provide the player and region config to map a generic region to a screen
+         *      consumes:
+         *          - application/json
+         *      produces:
+         *          - application/json
+         *      parameters:
+         *          - in: body
+         *            name: body
+         *            description: The config required for Node and Region API calls
+         *            required: true
+         *            schema:
+         *                $ref: '#/definitions/PlayerRegionConfig'
+         *      security:
+         *          - APIKeyHeader: []
+         *      responses:
+         *          200:
+         *              description: Acknowledgement
+         *              schema:
+         *                  $ref: '#/definitions/ApiAck'
+         *          400:
+         *              description : An error
+         *          429:
+         *              description : Rate limited end point rejecting post - resend value after cool down
+         */
+        router.post('/playback/player/regions/config/set', function(req, res) {
+            console.log('/playback/player/regions/config/set');
+            console.log(req.body);
+            res.json({ack: true});
+        });
+
+        /**
+         * @swagger
          * /playback/scene/audio/scale:
          *  post:
          *      tags:

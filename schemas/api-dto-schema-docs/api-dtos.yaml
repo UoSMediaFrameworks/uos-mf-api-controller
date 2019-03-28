@@ -1,4 +1,66 @@
 definitions:
+
+ Region:
+     type: object
+     description: 'A 2D region to be mapped to a screen'
+     required:
+        - ID
+        - X
+        - Y
+        - Width
+        - Height
+     properties:
+        ID:
+            type: string
+        X:
+            type: number
+        Y:
+            type: number
+        Width:
+            type: number
+        Height:
+            type: number
+ PlayerRegion:
+      type: object
+      description: 'An instance of mapping regions to a screen'
+      required:
+        - screen
+        - regions
+      properties:
+          screen:
+             type: string
+          regions:
+             type: array
+             items:
+                 $ref: '#/definitions/Region'
+
+ PlayerRegionConfig:
+     type: array
+     description: 'An entirely complete set of screens with regions'
+     items:
+        $ref: '#/definitions/PlayerRegion'
+
+ ContentNode:
+     type: object
+     required:
+        - name
+        - id
+        - contentPool
+        - renderer
+     properties:
+        id:
+            type: string
+        name:
+            type: string
+        contentPool:
+            type: array
+            items: 
+                $ref: '#/definitions/SceneTheme'
+        renderer:
+            type: object
+            $ref: '#/definitions/Region'
+
+ 
  ApiAck:
      type: object
      required:
@@ -183,6 +245,7 @@ definitions:
  SetTagMatcher:
      type: string
      description: A valid tag matcher string, bool tag matching allowed
+     
  MediaSceneForListSchema:
      type: object
      required:
@@ -306,6 +369,14 @@ definitions:
           type: object
       transitionOptions:
           type: object
+
+ ControllerReset:
+     type: object
+     properties:
+         environmentName:
+             type: string
+             description: the environment name for the controller to reset
+             required: true
 
  ApplySceneConfig:
      type: object
