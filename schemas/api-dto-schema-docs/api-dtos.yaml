@@ -10,15 +10,15 @@ definitions:
         - Width
         - Height
      properties:
-        ID:
+        id:
             type: string
-        X:
+        x:
             type: number
-        Y:
+        y:
             type: number
-        Width:
+        width:
             type: number
-        Height:
+        height:
             type: number
  PlayerRegion:
       type: object
@@ -46,7 +46,7 @@ definitions:
         - name
         - id
         - contentPool
-        - renderer
+        - region
      properties:
         id:
             type: string
@@ -55,8 +55,8 @@ definitions:
         contentPool:
             type: array
             items: 
-                $ref: '#/definitions/SceneTheme'
-        renderer:
+                $ref: '#/definitions/SceneAndThemes'
+        region:
             type: object
             $ref: '#/definitions/Region'
 
@@ -220,6 +220,22 @@ definitions:
          audioScaleFactor:
              type: number
              description: "Scale volume for all matching audio within the content selection"
+
+ SceneAndThemes:
+      type: object
+      required:
+          - scene
+          - themes
+      properties:
+          scene:
+              type: string
+              description: String Scene Id
+          theme:
+              type: array
+              items:
+                  type: string
+              description: String theme keys
+
  SceneTheme:
      type: object
      required:
