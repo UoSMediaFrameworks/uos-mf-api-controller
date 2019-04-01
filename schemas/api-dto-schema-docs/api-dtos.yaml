@@ -230,7 +230,7 @@ definitions:
           scene:
               type: string
               description: String Scene Id
-          theme:
+          themes:
               type: array
               items:
                   type: string
