@@ -76,6 +76,9 @@ class MediaframeApiController extends MediaframeworkHubController {
         router.post('/playback/node/content/show', function(req, res) {
             console.log('/playback/node/content/show');
             console.log(req.body);
+
+            self.commandAPIController.sendCommand(null, CommandAPIController.getCommandKeys().PLAYBACK_NODE_CONTENT_SHOW, req.body);
+
             res.json({ack: true});
         });
 
@@ -112,6 +115,9 @@ class MediaframeApiController extends MediaframeworkHubController {
         router.post('/playback/node/content/stop', function(req, res) {
             console.log('/playback/node/content/stop');
             console.log(req.body);
+
+            self.commandAPIController.sendCommand(null, CommandAPIController.getCommandKeys().PLAYBACK_NODE_CONTENT_STOP, req.body);
+
             res.json({ack: true});
         });
 
