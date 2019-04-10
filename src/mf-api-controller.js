@@ -154,6 +154,9 @@ class MediaframeApiController extends MediaframeworkHubController {
         router.post('/playback/node/content/replace', function(req, res) {
             console.log('/playback/node/content/replace');
             console.log(req.body);
+
+            self.commandAPIController.sendCommand(null, CommandAPIController.getCommandKeys().PLAYBACK_NODE_CONTENT_REPLACE, req.body);
+
             res.json({ack: true});
         });
 
